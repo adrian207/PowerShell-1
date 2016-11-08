@@ -33,10 +33,12 @@ function Invoke-DetectNow {
 					ComputerName = $Computer
 				}
 				Invoke-WmiMethod @splatting
-			
 			}
 		}
-		Catch { Write-Warning "Something bad happened" }
+		Catch {
+			Write-Warning -Message ("{0} - Something bad happened" -f $Computer)
+			Write-Warning -Message $Error[0].Exception.Message
+		}
 	}
 	
 }
@@ -76,10 +78,12 @@ function Invoke-ReportNow {
 					ComputerName = $Computer
 				}
 				Invoke-WmiMethod @splatting
-				
 			}
 		}
-		Catch { Write-Warning -Message "Something bad happened" }
+		Catch {
+			Write-Warning -Message ("{0} - Something bad happened" -f $Computer)
+			Write-Warning -Message $Error[0].Exception.Message
+		}
 	}
 	
 }
@@ -121,7 +125,10 @@ function Invoke-UpdateNow {
 				Invoke-WmiMethod @splatting
 			}
 		}
-		Catch { Write-Warning -Message "Something bad happened" }
+		Catch {
+			Write-Warning -Message ("{0} - Something bad happened" -f $Computer)
+			Write-Warning -Message $Error[0].Exception.Message
+		}
 	}
 	
 }
