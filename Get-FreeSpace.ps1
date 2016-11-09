@@ -25,7 +25,7 @@ function Get-FreeSpace {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose ("{0} - Getting disk space information" -f $Computer )
+				Write-Verbose -Message ("{0} - Getting disk space information" -f $Computer)
 				$splatting = @{
 					Class = "Win32_LogicalDisk"
 					Filter = "drivetype='3'"
@@ -45,6 +45,7 @@ function Get-FreeSpace {
 		}
 		Catch {
 			Write-Warning -Message "{0} - Something bad happened" -f $Computer
+			Write-Warning -Message $Error[0].Exception.Message
 		}
 	}
 	
