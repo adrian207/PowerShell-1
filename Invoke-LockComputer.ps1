@@ -29,7 +29,7 @@ function Invoke-LockComputer
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose ("{0} Locking the screen" -f $Computer )
+				Write-Verbose -Message ("{0} Locking the screen" -f $Computer)
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
@@ -39,7 +39,9 @@ function Invoke-LockComputer
 				Invoke-WmiMethod @splatting
 			}
 		}
-		Catch { Write-Warning "Something bad happened" }
+		Catch {
+			Write-Warning -Message "Something bad happened"
+		}
 	}
 
 }
