@@ -7,9 +7,15 @@ function Get-FlashVersion {
 		This function gets the Adobe Flash version on a local or remote machine.
 		
 	.PARAMETER ComputerName
-		
+	
+	.EXAMPLE
+		Get-FlashVersion
+	
 	.EXAMPLE
 		Get-FlashVersion -ComputerName Computer1
+		
+	.EXAMPLE
+		Get-FlashVersion -ComputerName Computer1,Computer2,Computer3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Get-FlashVersion
