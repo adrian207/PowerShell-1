@@ -7,9 +7,15 @@ function Get-FreeSpace {
 		This function gets the amount of free disk space on a local or remote machine.
 		
 	.PARAMETER ComputerName
+	
+	.EXAMPLE
+		Get-FreeSpace
 		
 	.EXAMPLE
 		Get-FreeSpace -ComputerName Server1
+		
+	.EXAMPLE
+		Get-FreeSpace -ComputerName Server1,Server2,Server3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Get-FreeSpace
@@ -44,7 +50,7 @@ function Get-FreeSpace {
 			}
 		}
 		Catch {
-			Write-Warning -Message "{0} - Something bad happened" -f $Computer
+			Write-Warning -Message ("{0} - Something bad happened" -f $Computer)
 			Write-Warning -Message $Error[0].Exception.Message
 		}
 	}
