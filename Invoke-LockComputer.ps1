@@ -32,18 +32,19 @@ function Invoke-LockComputer
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose -Message ( "{0}: Locking the screen" -f $Computer.ToUpper() )
+				$name = $Computer.ToUpper()
+				Write-Verbose -Message ( "{0}: Locking the screen" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
 					ArgumentList = "C:\Windows\System32\rundll32.exe user32.dll,LockWorkStation"
-					ComputerName = $Computer
+					ComputerName = $name
 				}
 				Invoke-WmiMethod @splatting
 			}
 		}
 		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $Computer.ToUpper() )
+			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
 		
