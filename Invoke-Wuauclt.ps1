@@ -25,7 +25,7 @@ function Invoke-DetectNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose ("{0} Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $Computer )
+				Write-Verbose ( "{0}: Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $Computer.ToUpper() )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
@@ -36,9 +36,10 @@ function Invoke-DetectNow {
 			}
 		}
 		Catch {
-			Write-Warning -Message ("{0} - Something bad happened" -f $Computer)
+			Write-Warning -Message ( "{0}: Something bad happened" -f $Computer.ToUpper() )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
+		
 	}
 	
 }
@@ -70,7 +71,7 @@ function Invoke-ReportNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose -Message ("{0} Invoking wuauclt.exe /ReportNow" -f $Computer )
+				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /ReportNow" -f $Computer.ToUpper() )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
@@ -81,9 +82,10 @@ function Invoke-ReportNow {
 			}
 		}
 		Catch {
-			Write-Warning -Message ("{0} - Something bad happened" -f $Computer)
+			Write-Warning -Message ( "{0}: Something bad happened" -f $Computer.ToUpper() )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
+		
 	}
 	
 }
@@ -115,7 +117,7 @@ function Invoke-UpdateNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose -Message ("{0} Invoking wuauclt.exe /UpdateNow" -f $Computer )
+				Write-Verbose -Message ("{0}: Invoking wuauclt.exe /UpdateNow" -f $Computer.ToUpper() )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
@@ -126,9 +128,10 @@ function Invoke-UpdateNow {
 			}
 		}
 		Catch {
-			Write-Warning -Message ("{0} - Something bad happened" -f $Computer)
+			Write-Warning -Message ("{0}: Something bad happened" -f $Computer.ToUpper() )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
+		
 	}
 	
 }
