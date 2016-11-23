@@ -16,6 +16,9 @@ function Invoke-LockComputer
 		Invoke-LockComputer -ComputerName Computer1
 		
 	.EXAMPLE
+		Invoke-LockComputer -ComputerName Computer1,Computer2,Computer3
+		
+	.EXAMPLE
 		Get-Content C:\computers.txt | Invoke-LockComputer
 	#>
 
@@ -29,7 +32,7 @@ function Invoke-LockComputer
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose -Message ("{0} Locking the screen" -f $Computer)
+				Write-Verbose -Message ( "{0}: Locking the screen" -f $Computer.ToUpper() )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
@@ -40,8 +43,10 @@ function Invoke-LockComputer
 			}
 		}
 		Catch {
-			Write-Warning -Message "Something bad happened"
+			Write-Warning -Message ( "{0}: Something bad happened" -f $Computer.ToUpper() )
+			Write-Warning -Message $Error[0].Exception.Message
 		}
+		
 	}
 
 }
