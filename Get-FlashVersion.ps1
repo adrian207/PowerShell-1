@@ -30,8 +30,9 @@ function Get-FlashVersion {
     
 	process {
 		ForEach ($Computer in $ComputerName) {
-			if(Test-Connection $Computer -count 1 -ErrorAction SilentlyContinue) {
-				$filename = "\\$Computer\c$\windows\system32\macromed\flash\flash*.ocx"
+			$name = Computer.ToUpper()
+			if(Test-Connection $name -count 1 -ErrorAction SilentlyContinue) {
+				$filename = "\\{0}\c$\windows\system32\macromed\flash\flash*.ocx" -f $name
 				if(Test-Path $filename) {
 					$file = Get-Item $filename
 					$version = $file.versionInfo.fileversion -replace ",","."
@@ -41,7 +42,7 @@ function Get-FlashVersion {
 			else { $Version = "Offline" }
 			
 			$object = New-Object -TypeName PSObject -Property @{
-				ComputerName = $Computer
+				ComputerName = $name
 				FlashVersion = $version
 			}
 			$object
