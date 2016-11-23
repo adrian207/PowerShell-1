@@ -21,12 +21,12 @@ function Get-FlashVersion {
 		Get-Content C:\computers.txt | Get-FlashVersion
 	#>
 	
-   [CmdletBinding()]
-    
+	[CmdletBinding()]
+
 	param(
-        [parameter(ValueFromPipeline=$True)]
+		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
-    )
+	)
     
 	process {
 		ForEach ($Computer in $ComputerName) {
@@ -35,12 +35,10 @@ function Get-FlashVersion {
 				if(Test-Path $filename) {
 					$file = Get-Item $filename
 					$version = $file.versionInfo.fileversion -replace ",","."
-				} else {
-					$version = "Not Installed"
 				}
-			} else {
-				$Version = "Offline"
+				else { $version = "Not Installed" }
 			}
+			else { $Version = "Offline" }
 			
 			$object = New-Object -TypeName PSObject -Property @{
 				ComputerName = $Computer
@@ -49,6 +47,6 @@ function Get-FlashVersion {
 			$object
 		}
 		
-    }
+	}
 	
 }
