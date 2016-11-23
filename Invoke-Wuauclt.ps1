@@ -25,18 +25,19 @@ function Invoke-DetectNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose ( "{0}: Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $Computer.ToUpper() )
+				$name = Computer.ToUpper()
+				Write-Verbose ( "{0}: Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
 					ArgumentList = "wuauclt.exe /ResetAuthorization /DetectNow"
-					ComputerName = $Computer
+					ComputerName = $name
 				}
 				Invoke-WmiMethod @splatting
 			}
 		}
 		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $Computer.ToUpper() )
+			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
 		
@@ -71,18 +72,19 @@ function Invoke-ReportNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /ReportNow" -f $Computer.ToUpper() )
+				$name = Computer.ToUpper()
+				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /ReportNow" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
 					ArgumentList = "wuauclt.exe /ReportNow"
-					ComputerName = $Computer
+					ComputerName = $name
 				}
 				Invoke-WmiMethod @splatting
 			}
 		}
 		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $Computer.ToUpper() )
+			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
 		
@@ -117,18 +119,19 @@ function Invoke-UpdateNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				Write-Verbose -Message ("{0}: Invoking wuauclt.exe /UpdateNow" -f $Computer.ToUpper() )
+				$name = Computer.ToUpper()
+				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /UpdateNow" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
 					ArgumentList = "wuauclt.exe /UpdateNow"
-					ComputerName = $Computer
+					ComputerName = $name
 				}
 				Invoke-WmiMethod @splatting
 			}
 		}
 		Catch {
-			Write-Warning -Message ("{0}: Something bad happened" -f $Computer.ToUpper() )
+			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
 		
