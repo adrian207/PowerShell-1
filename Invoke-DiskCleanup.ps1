@@ -61,7 +61,7 @@ function Invoke-DiskCleanup {
 					}
 				}
 				
-				Write-Verbose ("{0}: Invoking cleanmgr /sagerun:1" -f $name )
+				Write-Verbose -Message ( "{0}: Invoking cleanmgr /sagerun:1" -f $name )
 				$WmiMethodSplatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
@@ -72,7 +72,7 @@ function Invoke-DiskCleanup {
 			}
 		}
 		Catch {
-			Write-Warning -Message ("{0}: Something bad happened" -f $name )
+			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
 		
