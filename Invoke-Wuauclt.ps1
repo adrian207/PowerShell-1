@@ -25,7 +25,7 @@ function Invoke-DetectNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				$name = Computer.ToUpper()
+				$name = $Computer.ToUpper()
 				Write-Verbose ( "{0}: Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
@@ -72,7 +72,7 @@ function Invoke-ReportNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				$name = Computer.ToUpper()
+				$name = $Computer.ToUpper()
 				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /ReportNow" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
@@ -119,7 +119,7 @@ function Invoke-UpdateNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				$name = Computer.ToUpper()
+				$name = $Computer.ToUpper()
 				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /UpdateNow" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
