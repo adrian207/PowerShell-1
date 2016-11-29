@@ -30,7 +30,7 @@ function Get-FlashVersion {
     
 	process {
 		ForEach ($Computer in $ComputerName) {
-			$name = Computer.ToUpper()
+			$name = $Computer.ToUpper()
 			if(Test-Connection $name -count 1 -ErrorAction SilentlyContinue) {
 				$filename = "\\{0}\c$\windows\system32\macromed\flash\flash*.ocx" -f $name
 				if(Test-Path $filename) {
