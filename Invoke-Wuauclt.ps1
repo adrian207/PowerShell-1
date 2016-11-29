@@ -26,7 +26,7 @@ function Invoke-DetectNow {
 		Try {
 			ForEach ($Computer in $ComputerName) {
 				$name = $Computer.ToUpper()
-				Write-Verbose ( "{0}: Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $name )
+				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $name )
 				$splatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
