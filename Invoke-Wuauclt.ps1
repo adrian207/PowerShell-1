@@ -7,9 +7,15 @@ function Invoke-DetectNow {
 		This function detects installed Windows updates on a local or remote machine.
 		
 	.PARAMETER ComputerName
-		
+	
+	.EXAMPLE
+		Invoke-DetectNow
+	
 	.EXAMPLE
 		Invoke-DetectNow -ComputerName Computer1
+		
+	.EXAMPLE
+		Invoke-DetectNow -ComputerName Computer1,Computer2,Computer3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Invoke-DetectNow
@@ -54,9 +60,15 @@ function Invoke-ReportNow {
 		This function reports the Windows update status of a local or remote machine to WSUS.
 		
 	.PARAMETER ComputerName
-		
+	
+	.EXAMPLE
+		Invoke-ReportNow
+	
 	.EXAMPLE
 		Invoke-ReportNow -ComputerName Computer1
+		
+	.EXAMPLE
+		Invoke-ReportNow -ComputerName Computer1,Computer2,Computer3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Invoke-ReportNow
@@ -101,9 +113,15 @@ function Invoke-UpdateNow {
 		This function forces a local or remote machine to update Windows now.
 		
 	.PARAMETER ComputerName
-		
+	
+	.EXAMPLE
+		Invoke-ReportNow
+	
 	.EXAMPLE
 		Invoke-ReportNow -ComputerName Computer1
+		
+	.EXAMPLE
+		Invoke-ReportNow -ComputerName Computer1,Computer2,Computer3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Invoke-UpdateNow
