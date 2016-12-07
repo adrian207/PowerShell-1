@@ -89,6 +89,15 @@ function Remove-SoftwareDistribution {
 	
 	.EXAMPLE
 		Remove-SoftwareDistribution
+		
+	.EXAMPLE
+		Remove-SoftwareDistribution -ComputerName Computer1
+	
+	.EXAMPLE
+		Remove-SoftwareDistribution -ComputerName Computer1,Computer2,Computer3
+		
+	.EXAMPLE
+		Get-Content C:\computers.txt | Remove-SoftwareDistribution
 	#>
 	
 	[CmdletBinding()]
