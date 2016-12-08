@@ -111,12 +111,16 @@ function Remove-SoftwareDistribution {
 		ForEach ($Computer in $ComputerName) {
 			$Name = $Computer.ToUpper()
 			Invoke-Command -Computer $Name -ScriptBlock {
+				Stop-Service -Name "wuauserv"
+				
 				$SoftwareDistribution = Join-Path -Path $Env:WinDir -ChildPath SoftwareDistribution
 				$Splatting = @{
 					Path = $SoftwareDistribution
 					Recurse = $True
 				}
 				Remove-Item @Splatting
+				
+				Start-Service -Name "wuauserv"
 			}
 		}
 	}
