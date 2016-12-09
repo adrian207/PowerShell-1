@@ -125,3 +125,49 @@ function Remove-SoftwareDistribution {
 		}
 	}
 }
+
+function Remove-CBSLogs {
+	<#
+	.SYNOPSIS
+		This function removes all files from the CBS folder and all subfolders on a local or remote machine.
+		
+	.DESCRIPTION
+		This function removes all files from the CBS folder and all subfolders on a local or remote machine.
+		
+	.PARAMETER ComputerName
+	
+	.EXAMPLE
+		Remove-CBSLogs
+		
+	.EXAMPLE
+		Remove-CBSLogs -ComputerName Computer1
+	
+	.EXAMPLE
+		Remove-CBSLogs -ComputerName Computer1,Computer2,Computer3
+		
+	.EXAMPLE
+		Get-Content C:\computers.txt | Remove-CBSLogs
+	#>
+	
+	[CmdletBinding()]
+	
+	param()
+	
+	process {
+		ForEach ($Computer in $ComputerName) {
+			$Name = $Computer.ToUpper()
+			Invoke-Command -Computer $Name -ScriptBlock {
+				Stop-Service -Name "Windows Modules Installer"
+				
+				$Cbs = Join-Path -Path $Env:WinDir -ChildPath "Logs\CBS"
+				$Splatting = @{
+					Path = $SoftwareDistribution
+					Recurse = $True
+				}
+				Remove-Item @Splatting
+				
+				Start-Service -Name "Windows Modules Installer"
+			}
+		}
+	}
+}
