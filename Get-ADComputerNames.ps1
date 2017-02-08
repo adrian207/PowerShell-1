@@ -1,4 +1,4 @@
-﻿function Get-ADWorkstationNames {
+﻿function Get-ADComputerNames {
 <#
 .SYNOPSIS
 	This function gets a list of names for all computers in Active Directory.
@@ -7,10 +7,10 @@
 	This function gets a list of names for all computers in Active Directory.
 
 .EXAMPLE
-	Get-ADWorkstationNames
+	Get-ADComputerNames
 
 .EXAMPLE
-	Get-ADWorkstationNames | Out-File -FilePath C:\computers.txt -Encoding utf8
+	Get-ADComputerNames | Out-File -FilePath C:\computers.txt -Encoding utf8
 #>
 
 	[CmdletBinding()]
