@@ -1,25 +1,25 @@
 function Invoke-DiskCleanup {
-	<#
-	.SYNOPSIS
-		This function creates a sageset in the registry and then runs cleanmgr on a local or remote machine.
-		
-	.DESCRIPTION
-		This function creates a sageset in the registry and then runs cleanmgr on a local or remote machine.
-		
-	.PARAMETER ComputerName
-	
-	.EXAMPLE
-		Invoke-DiskCleanup
-		
-	.EXAMPLE
-		Invoke-DiskCleanup -ComputerName Computer1
-		
-	.EXAMPLE
-		Invoke-DiskCleanup -ComputerName Computer1,Computer2,Computer3
-		
-	.EXAMPLE
-		Get-Content C:\computers.txt | Invoke-DiskCleanup
-	#>
+<#
+.SYNOPSIS
+	This function creates a sageset in the registry and then runs cleanmgr on a local or remote machine.
+
+.DESCRIPTION
+	This function creates a sageset in the registry and then runs cleanmgr on a local or remote machine.
+
+.PARAMETER ComputerName
+
+.EXAMPLE
+	Invoke-DiskCleanup
+
+.EXAMPLE
+	Invoke-DiskCleanup -ComputerName Computer1
+
+.EXAMPLE
+	Invoke-DiskCleanup -ComputerName Computer1,Computer2,Computer3
+
+.EXAMPLE
+	Get-Content C:\computers.txt | Invoke-DiskCleanup
+#>
 
 	[CmdletBinding()]
 	
@@ -29,28 +29,28 @@ function Invoke-DiskCleanup {
 	)
 	
 	process {
-		Try {
-			$keys = @(
-				"Setup Log Files",
-				"Downloaded Program Files",
-				"Delivery Optimization Files",
-				"Recycle Bin",
-				"Temporary Files",
-				"Thumbnail Cache",
-				"Update Cleanup"
-			)
-			
-			ForEach ($Computer in $ComputerName) {
-				$name = $Computer.ToUpper()
-				ForEach ($key in $keys) {	
-					$hklm = Join-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches" -ChildPath $key
-					Write-Verbose -Message ( "{0}: Writing registry key {1}" -f $name,$hklm )
+		$Keys = @(
+			"Setup Log Files",
+			"Downloaded Program Files",
+			"Delivery Optimization Files",
+			"Recycle Bin",
+			"Temporary Files",
+			"Thumbnail Cache",
+			"Update Cleanup"
+		)
+		
+		ForEach ($Computer in $ComputerName) {
+			Try {
+				$Name = $Computer.ToUpper()
+				ForEach ($Key in $Keys) {	
+					$Hklm = Join-Path -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches" -ChildPath $key
+					Write-Verbose -Message ( "PROCESS - {0} - Writing registry key {1}" -f $Name,$Hklm )
 					
-					Invoke-Command -ComputerName $name -ArgumentList $hklm -ScriptBlock {
-						param($hklm)
+					Invoke-Command -ComputerName $Name -ArgumentList $Hklm -ScriptBlock {
+						param($Hklm)
 					
 						$ItemPropertySplatting = @{
-							Path = $hklm
+							Path = $Hklm
 							Name = "StateFlags0001"
 							Value = 2
 							PropertyType = "DWord"
@@ -60,45 +60,45 @@ function Invoke-DiskCleanup {
 					}
 				}
 				
-				Write-Verbose -Message ( "{0}: Invoking cleanmgr /sagerun:1" -f $name )
+				Write-Verbose -Message ( "PROCESS - {0} - Invoking cleanmgr /sagerun:1" -f $Name )
 				$WmiMethodSplatting = @{
 					Class = "Win32_Process"
 					Name = "Create"
 					ArgumentList = "cleanmgr /sagerun:1"
-					ComputerName = $name
+					ComputerName = $Name
 				}
 				Invoke-WmiMethod @WmiMethodSplatting | Out-Null
 			}
-		}
-		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
-			Write-Warning -Message $Error[0].Exception.Message
+			Catch {
+				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
+				Write-Warning -Message $Error[0].Exception.Message
+			}
 		}
 	}
 }
 
 function Remove-SoftwareDistribution {
-	<#
-	.SYNOPSIS
-		This function removes the SoftwareDistribution folder and all subfolders from the Windows directory on a local or remote machine.
-		
-	.DESCRIPTION
-		This function removes the SoftwareDistribution folder and all subfolders from the Windows directory on a local or remote machine.
-		
-	.PARAMETER ComputerName
-	
-	.EXAMPLE
-		Remove-SoftwareDistribution
-		
-	.EXAMPLE
-		Remove-SoftwareDistribution -ComputerName Computer1
-	
-	.EXAMPLE
-		Remove-SoftwareDistribution -ComputerName Computer1,Computer2,Computer3
-		
-	.EXAMPLE
-		Get-Content C:\computers.txt | Remove-SoftwareDistribution
-	#>
+<#
+.SYNOPSIS
+	This function removes the SoftwareDistribution folder and all subfolders from the Windows directory on a local or remote machine.
+
+.DESCRIPTION
+	This function removes the SoftwareDistribution folder and all subfolders from the Windows directory on a local or remote machine.
+
+.PARAMETER ComputerName
+
+.EXAMPLE
+	Remove-SoftwareDistribution
+
+.EXAMPLE
+	Remove-SoftwareDistribution -ComputerName Computer1
+
+.EXAMPLE
+	Remove-SoftwareDistribution -ComputerName Computer1,Computer2,Computer3
+
+.EXAMPLE
+	Get-Content C:\computers.txt | Remove-SoftwareDistribution
+#>
 	
 	[CmdletBinding()]
 	
@@ -109,64 +109,79 @@ function Remove-SoftwareDistribution {
 	
 	process {
 		ForEach ($Computer in $ComputerName) {
-			$Name = $Computer.ToUpper()
-			Invoke-Command -Computer $Name -ScriptBlock {
-				Stop-Service -Name "wuauserv"
-				
-				$SoftwareDistribution = Join-Path -Path $Env:WinDir -ChildPath SoftwareDistribution
-				$Splatting = @{
-					Path = $SoftwareDistribution
-					Recurse = $True
+			Try {
+				$Name = $Computer.ToUpper()
+				Invoke-Command -Computer $Name -ScriptBlock {
+					Stop-Service -Name "wuauserv"
+
+					$SoftwareDistribution = Join-Path -Path $Env:WinDir -ChildPath SoftwareDistribution
+					$Splatting = @{
+						Path = $SoftwareDistribution
+						Recurse = $True
+					}
+					Remove-Item @Splatting
+
+					Start-Service -Name "wuauserv"
 				}
-				Remove-Item @Splatting
-				
-				Start-Service -Name "wuauserv"
+			}
+			Catch {
+				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $name )
+				Write-Warning -Message $Error[0].Exception.Message
 			}
 		}
 	}
 }
 
 function Remove-CBSLogs {
-	<#
-	.SYNOPSIS
-		This function removes all files from the CBS folder and all subfolders on a local or remote machine.
-		
-	.DESCRIPTION
-		This function removes all files from the CBS folder and all subfolders on a local or remote machine.
-		
-	.PARAMETER ComputerName
-	
-	.EXAMPLE
-		Remove-CBSLogs
-		
-	.EXAMPLE
-		Remove-CBSLogs -ComputerName Computer1
-	
-	.EXAMPLE
-		Remove-CBSLogs -ComputerName Computer1,Computer2,Computer3
-		
-	.EXAMPLE
-		Get-Content C:\computers.txt | Remove-CBSLogs
-	#>
+<#
+.SYNOPSIS
+	This function removes all files from the CBS folder and all subfolders on a local or remote machine.
+
+.DESCRIPTION
+	This function removes all files from the CBS folder and all subfolders on a local or remote machine.
+
+.PARAMETER ComputerName
+
+.EXAMPLE
+	Remove-CBSLogs
+
+.EXAMPLE
+	Remove-CBSLogs -ComputerName Computer1
+
+.EXAMPLE
+	Remove-CBSLogs -ComputerName Computer1,Computer2,Computer3
+
+.EXAMPLE
+	Get-Content C:\computers.txt | Remove-CBSLogs
+#>
 	
 	[CmdletBinding()]
 	
-	param()
+	param(
+		[parameter(ValueFromPipeline=$True)]
+		[string[]]$ComputerName = $Env:ComputerName
+	)
 	
 	process {
 		ForEach ($Computer in $ComputerName) {
-			$Name = $Computer.ToUpper()
-			Invoke-Command -Computer $Name -ScriptBlock {
-				Stop-Service -Name "Windows Modules Installer"
-				
-				$Cbs = Join-Path -Path $Env:WinDir -ChildPath "Logs\CBS"
-				$Splatting = @{
-					Path = $SoftwareDistribution
-					Recurse = $True
+			Try {
+				$Name = $Computer.ToUpper()
+				Invoke-Command -Computer $Name -ScriptBlock {
+					Stop-Service -Name "Windows Modules Installer"
+
+					$Cbs = Join-Path -Path $Env:WinDir -ChildPath "Logs\CBS"
+					$Splatting = @{
+						Path = $SoftwareDistribution
+						Recurse = $True
+					}
+					Remove-Item @Splatting
+
+					Start-Service -Name "Windows Modules Installer"
 				}
-				Remove-Item @Splatting
-				
-				Start-Service -Name "Windows Modules Installer"
+			}
+			Catch {
+				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $name )
+				Write-Warning -Message $Error[0].Exception.Message
 			}
 		}
 	}
