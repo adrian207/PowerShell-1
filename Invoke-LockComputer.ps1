@@ -34,13 +34,14 @@ function Invoke-LockComputer
 			ForEach ($Computer in $ComputerName) {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCCESS - {0} - Locking the screen" -f $Name )
+				$CimClass = Get-CimClass -ClassName Win32_Process
 				$Splatting = @{
-					Class = "Win32_Process"
-					Name = "Create"
-					ArgumentList = "C:\Windows\System32\rundll32.exe user32.dll,LockWorkStation"
+					CimClass = $CimClass
+					MethodName = "Create"
+					Arguments = "C:\Windows\System32\rundll32.exe user32.dll,LockWorkStation"
 					ComputerName = $Name
 				}
-				Invoke-WmiMethod @Splatting
+				Invoke-CimMethod @Splatting
 			}
 		}
 		Catch {
