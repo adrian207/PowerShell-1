@@ -1,25 +1,25 @@
 function Invoke-DetectNow {
-	<#
-	.SYNOPSIS
-		This function detects installed Windows updates on a local or remote machine.
-		
-	.DESCRIPTION
-		This function detects installed Windows updates on a local or remote machine.
-		
-	.PARAMETER ComputerName
-	
-	.EXAMPLE
-		Invoke-DetectNow
-	
-	.EXAMPLE
-		Invoke-DetectNow -ComputerName COMPUTER1
-		
-	.EXAMPLE
-		Invoke-DetectNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
-		
-	.EXAMPLE
-		Get-Content C:\computers.txt | Invoke-DetectNow
-	#>
+<#
+.SYNOPSIS
+	This function detects installed Windows updates on a local or remote machine.
+
+.DESCRIPTION
+	This function detects installed Windows updates on a local or remote machine.
+
+.PARAMETER ComputerName
+
+.EXAMPLE
+	Invoke-DetectNow
+
+.EXAMPLE
+	Invoke-DetectNow -ComputerName COMPUTER1
+
+.EXAMPLE
+	Invoke-DetectNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
+
+.EXAMPLE
+	Get-Content C:\computers.txt | Invoke-DetectNow
+#>
 	
 	[CmdletBinding()]
 	
@@ -51,27 +51,27 @@ function Invoke-DetectNow {
 }
 
 function Invoke-ReportNow {
-	<#
-	.SYNOPSIS
-		This function reports the Windows update status of a local or remote machine to WSUS.
-		
-	.DESCRIPTION
-		This function reports the Windows update status of a local or remote machine to WSUS.
-		
-	.PARAMETER ComputerName
-	
-	.EXAMPLE
-		Invoke-ReportNow
-	
-	.EXAMPLE
-		Invoke-ReportNow -ComputerName COMPUTER1
-		
-	.EXAMPLE
-		Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
-		
-	.EXAMPLE
-		Get-Content C:\computers.txt | Invoke-ReportNow
-	#>
+<#
+.SYNOPSIS
+	This function reports the Windows update status of a local or remote machine to WSUS.
+
+.DESCRIPTION
+	This function reports the Windows update status of a local or remote machine to WSUS.
+
+.PARAMETER ComputerName
+
+.EXAMPLE
+	Invoke-ReportNow
+
+.EXAMPLE
+	Invoke-ReportNow -ComputerName COMPUTER1
+
+.EXAMPLE
+	Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
+
+.EXAMPLE
+	Get-Content C:\computers.txt | Invoke-ReportNow
+#>
 		
 	[CmdletBinding()]
 	
@@ -103,27 +103,27 @@ function Invoke-ReportNow {
 }
 
 function Invoke-UpdateNow {
-	<#
-	.SYNOPSIS
-		This function forces a local or remote machine to update Windows now.
-		
-	.DESCRIPTION
-		This function forces a local or remote machine to update Windows now.
-		
-	.PARAMETER ComputerName
-	
-	.EXAMPLE
-		Invoke-ReportNow
-	
-	.EXAMPLE
-		Invoke-ReportNow -ComputerName COMPUTER1
-		
-	.EXAMPLE
-		Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
-		
-	.EXAMPLE
-		Get-Content C:\computers.txt | Invoke-UpdateNow
-	#>
+<#
+.SYNOPSIS
+	This function forces a local or remote machine to update Windows now.
+
+.DESCRIPTION
+	This function forces a local or remote machine to update Windows now.
+
+.PARAMETER ComputerName
+
+.EXAMPLE
+	Invoke-ReportNow
+
+.EXAMPLE
+	Invoke-ReportNow -ComputerName COMPUTER1
+
+.EXAMPLE
+	Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
+
+.EXAMPLE
+	Get-Content C:\computers.txt | Invoke-UpdateNow
+#>
 		
 	[CmdletBinding()]
 	
