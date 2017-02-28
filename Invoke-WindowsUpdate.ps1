@@ -12,10 +12,10 @@ function Invoke-DetectNow {
 		Invoke-DetectNow
 	
 	.EXAMPLE
-		Invoke-DetectNow -ComputerName Computer1
+		Invoke-DetectNow -ComputerName COMPUTER1
 		
 	.EXAMPLE
-		Invoke-DetectNow -ComputerName Computer1,Computer2,Computer3
+		Invoke-DetectNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Invoke-DetectNow
@@ -31,24 +31,23 @@ function Invoke-DetectNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				$name = $Computer.ToUpper()
-				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $name )
-				$splatting = @{
-					Class = "Win32_Process"
-					Name = "Create"
-					ArgumentList = "wuauclt.exe /ResetAuthorization /DetectNow"
-					ComputerName = $name
+				$Name = $Computer.ToUpper()
+				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $Name )
+				$CimClass = Get-CimClass -ClassName Win32_Process
+				$Splatting = @{
+					CimClass = $CimClass
+					MethodName = "Create"
+					Arguments = "wuauclt.exe /ResetAuthorization /DetectNow"
+					ComputerName = $Name
 				}
-				Invoke-WmiMethod @splatting
+				Invoke-CimMethod @Splatting
 			}
 		}
 		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
+			Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
-		
 	}
-	
 }
 
 function Invoke-ReportNow {
@@ -65,10 +64,10 @@ function Invoke-ReportNow {
 		Invoke-ReportNow
 	
 	.EXAMPLE
-		Invoke-ReportNow -ComputerName Computer1
+		Invoke-ReportNow -ComputerName COMPUTER1
 		
 	.EXAMPLE
-		Invoke-ReportNow -ComputerName Computer1,Computer2,Computer3
+		Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Invoke-ReportNow
@@ -84,24 +83,23 @@ function Invoke-ReportNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				$name = $Computer.ToUpper()
-				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /ReportNow" -f $name )
-				$splatting = @{
-					Class = "Win32_Process"
-					Name = "Create"
-					ArgumentList = "wuauclt.exe /ReportNow"
-					ComputerName = $name
+				$Name = $Computer.ToUpper()
+				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ReportNow" -f $Name )
+				$CimClass = Get-CimClass -ClassName Win32_Process
+				$Splatting = @{
+					CimClass = $CimClass
+					MethodName = "Create"
+					Arguments = "wuauclt.exe /ReportNow"
+					ComputerName = $Name
 				}
-				Invoke-WmiMethod @splatting
+				Invoke-WmiMethod @Splatting
 			}
 		}
 		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
+			Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 			Write-Warning -Message $Error[0].Exception.Message
 		}
-		
 	}
-	
 }
 
 function Invoke-UpdateNow {
@@ -118,10 +116,10 @@ function Invoke-UpdateNow {
 		Invoke-ReportNow
 	
 	.EXAMPLE
-		Invoke-ReportNow -ComputerName Computer1
+		Invoke-ReportNow -ComputerName COMPUTER1
 		
 	.EXAMPLE
-		Invoke-ReportNow -ComputerName Computer1,Computer2,Computer3
+		Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
 		
 	.EXAMPLE
 		Get-Content C:\computers.txt | Invoke-UpdateNow
@@ -137,22 +135,21 @@ function Invoke-UpdateNow {
 	process {
 		Try {
 			ForEach ($Computer in $ComputerName) {
-				$name = $Computer.ToUpper()
-				Write-Verbose -Message ( "{0}: Invoking wuauclt.exe /UpdateNow" -f $name )
-				$splatting = @{
-					Class = "Win32_Process"
-					Name = "Create"
-					ArgumentList = "wuauclt.exe /UpdateNow"
-					ComputerName = $name
+				$Name = $Computer.ToUpper()
+				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /UpdateNow" -f $Name )
+				$CimClass = Get-CimClass -ClassName Win32_Process
+				$Splatting = @{
+					CimClass = "Win32_Process"
+					MethodName = "Create"
+					Arguments = "wuauclt.exe /UpdateNow"
+					ComputerName = $Name
 				}
-				Invoke-WmiMethod @splatting
+				Invoke-WmiMethod @Splatting
 			}
 		}
 		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
+			Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 			Write-Warning -Message $Error[0].Exception.Message
-		}
-		
-	}
-	
+		}	
+	}	
 }
