@@ -92,7 +92,7 @@ function Invoke-ReportNow {
 					Arguments = "wuauclt.exe /ReportNow"
 					ComputerName = $Name
 				}
-				Invoke-WmiMethod @Splatting
+				Invoke-CimMethod @Splatting
 			}
 		}
 		Catch {
@@ -144,7 +144,7 @@ function Invoke-UpdateNow {
 					Arguments = "wuauclt.exe /UpdateNow"
 					ComputerName = $Name
 				}
-				Invoke-WmiMethod @Splatting
+				Invoke-CimMethod @Splatting
 			}
 		}
 		Catch {
