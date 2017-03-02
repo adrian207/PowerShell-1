@@ -29,11 +29,11 @@ function Invoke-DetectNow {
 	)
 	
 	Process {
-        ForEach ($Computer in $ComputerName) {
-            Try {
+		ForEach ($Computer in $ComputerName) {
+			Try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $Name )
-                
+
 				$Splatting = @{
 					CimClass = (Get-CimClass -ClassName Win32_Process)
 					MethodName = "Create"
@@ -42,10 +42,10 @@ function Invoke-DetectNow {
 				}
 				Invoke-CimMethod @Splatting
 			}
-            Catch {
-                Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
-                Write-Warning -Message $Error[0].Exception.Message
-            }
+			Catch {
+				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
+				Write-Warning -Message $Error[0].Exception.Message
+		    	}
 		}
 	}
 }
@@ -81,8 +81,8 @@ function Invoke-ReportNow {
 	)
 	
 	Process {
-        ForEach ($Computer in $ComputerName) {
-            Try {
+        	ForEach ($Computer in $ComputerName) {
+			Try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ReportNow" -f $Name )
                 
@@ -94,10 +94,10 @@ function Invoke-ReportNow {
 				}
 				Invoke-CimMethod @Splatting
 			}
-            Catch {
-                Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
-                Write-Warning -Message $Error[0].Exception.Message
-            }
+			Catch {
+				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
+				Write-Warning -Message $Error[0].Exception.Message
+			}
 		}
 	}
 }
@@ -134,7 +134,7 @@ function Invoke-UpdateNow {
 	
 	Process {
 		ForEach ($Computer in $ComputerName) {
-            Try {
+			Try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /UpdateNow" -f $Name )
                 
@@ -146,10 +146,10 @@ function Invoke-UpdateNow {
 				}
 				Invoke-CimMethod @Splatting
 			}
-            Catch {
-                Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
-                Write-Warning -Message $Error[0].Exception.Message
-            }	
+            		Catch {
+				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
+				Write-Warning -Message $Error[0].Exception.Message
+            		}	
 		}
 	}	
 }
