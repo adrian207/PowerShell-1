@@ -12,10 +12,10 @@ function Invoke-DetectNow {
 	Invoke-DetectNow
 
 .EXAMPLE
-	Invoke-DetectNow -ComputerName COMPUTER1
+	Invoke-DetectNow -ComputerName COMPUTER01
 
 .EXAMPLE
-	Invoke-DetectNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
+	Invoke-DetectNow -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
 	Get-Content C:\computers.txt | Invoke-DetectNow
@@ -23,29 +23,29 @@ function Invoke-DetectNow {
 	
 	[CmdletBinding()]
 	
-	param(
+	Param(
 		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
-	process {
-		Try {
-			ForEach ($Computer in $ComputerName) {
+	Process {
+        ForEach ($Computer in $ComputerName) {
+            Try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $Name )
-				$CimClass = Get-CimClass -ClassName Win32_Process
+                
 				$Splatting = @{
-					CimClass = $CimClass
+					CimClass = (Get-CimClass -ClassName Win32_Process)
 					MethodName = "Create"
 					Arguments = "wuauclt.exe /ResetAuthorization /DetectNow"
 					ComputerName = $Name
 				}
 				Invoke-CimMethod @Splatting
 			}
-		}
-		Catch {
-			Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
-			Write-Warning -Message $Error[0].Exception.Message
+            Catch {
+                Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
+                Write-Warning -Message $Error[0].Exception.Message
+            }
 		}
 	}
 }
@@ -64,10 +64,10 @@ function Invoke-ReportNow {
 	Invoke-ReportNow
 
 .EXAMPLE
-	Invoke-ReportNow -ComputerName COMPUTER1
+	Invoke-ReportNow -ComputerName COMPUTER01
 
 .EXAMPLE
-	Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
+	Invoke-ReportNow -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
 	Get-Content C:\computers.txt | Invoke-ReportNow
@@ -75,29 +75,29 @@ function Invoke-ReportNow {
 		
 	[CmdletBinding()]
 	
-	param(
+	Param(
 		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
-	process {
-		Try {
-			ForEach ($Computer in $ComputerName) {
+	Process {
+        ForEach ($Computer in $ComputerName) {
+            Try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ReportNow" -f $Name )
-				$CimClass = Get-CimClass -ClassName Win32_Process
+                
 				$Splatting = @{
-					CimClass = $CimClass
+					CimClass = (Get-CimClass -ClassName Win32_Process)
 					MethodName = "Create"
 					Arguments = "wuauclt.exe /ReportNow"
 					ComputerName = $Name
 				}
 				Invoke-CimMethod @Splatting
 			}
-		}
-		Catch {
-			Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
-			Write-Warning -Message $Error[0].Exception.Message
+            Catch {
+                Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
+                Write-Warning -Message $Error[0].Exception.Message
+            }
 		}
 	}
 }
@@ -116,10 +116,10 @@ function Invoke-UpdateNow {
 	Invoke-ReportNow
 
 .EXAMPLE
-	Invoke-ReportNow -ComputerName COMPUTER1
+	Invoke-ReportNow -ComputerName COMPUTER01
 
 .EXAMPLE
-	Invoke-ReportNow -ComputerName COMPUTER1,COMPUTER2,COMPUTER3
+	Invoke-ReportNow -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
 	Get-Content C:\computers.txt | Invoke-UpdateNow
@@ -127,29 +127,29 @@ function Invoke-UpdateNow {
 		
 	[CmdletBinding()]
 	
-	param(
+	Param(
 		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
-	process {
-		Try {
-			ForEach ($Computer in $ComputerName) {
+	Process {
+		ForEach ($Computer in $ComputerName) {
+            Try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /UpdateNow" -f $Name )
-				$CimClass = Get-CimClass -ClassName Win32_Process
+                
 				$Splatting = @{
-					CimClass = "Win32_Process"
+					CimClass = (Get-CimClass -ClassName Win32_Process)
 					MethodName = "Create"
 					Arguments = "wuauclt.exe /UpdateNow"
 					ComputerName = $Name
 				}
 				Invoke-CimMethod @Splatting
 			}
+            Catch {
+                Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
+                Write-Warning -Message $Error[0].Exception.Message
+            }	
 		}
-		Catch {
-			Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
-			Write-Warning -Message $Error[0].Exception.Message
-		}	
 	}	
 }
