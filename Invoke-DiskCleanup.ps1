@@ -12,10 +12,10 @@ function Invoke-DiskCleanup {
 	Invoke-DiskCleanup
 
 .EXAMPLE
-	Invoke-DiskCleanup -ComputerName Computer1
+	Invoke-DiskCleanup -ComputerName COMPUTER01
 
 .EXAMPLE
-	Invoke-DiskCleanup -ComputerName Computer1,Computer2,Computer3
+	Invoke-DiskCleanup -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
 	Get-Content C:\computers.txt | Invoke-DiskCleanup
@@ -23,12 +23,12 @@ function Invoke-DiskCleanup {
 
 	[CmdletBinding()]
 	
-	param(
+	Param(
 		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
-	process {
+	Process {
 		$Keys = @(
 			"Setup Log Files",
 			"Downloaded Program Files",
@@ -91,10 +91,10 @@ function Remove-SoftwareDistribution {
 	Remove-SoftwareDistribution
 
 .EXAMPLE
-	Remove-SoftwareDistribution -ComputerName Computer1
+	Remove-SoftwareDistribution -ComputerName COMPUTER01
 
 .EXAMPLE
-	Remove-SoftwareDistribution -ComputerName Computer1,Computer2,Computer3
+	Remove-SoftwareDistribution -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
 	Get-Content C:\computers.txt | Remove-SoftwareDistribution
@@ -146,10 +146,10 @@ function Remove-CBSLogs {
 	Remove-CBSLogs
 
 .EXAMPLE
-	Remove-CBSLogs -ComputerName Computer1
+	Remove-CBSLogs -ComputerName COMPUTER01
 
 .EXAMPLE
-	Remove-CBSLogs -ComputerName Computer1,Computer2,Computer3
+	Remove-CBSLogs -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
 	Get-Content C:\computers.txt | Remove-CBSLogs
