@@ -29,17 +29,19 @@ function Get-ProgramList {
                 $Name = $Computer.ToUpper()
                 Write-Verbose -Message ( "PROCESS - {0} - Getting program list" -f $Name )
                 
-                $Hklm = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
-                $Programs = Get-ItemProperty -Path $Hklm
-                ForEach ($Program in $Programs) {
-                    $Info = [ordered]@{
-                        Name = $Program.DisplayName
-                        Version = $Program.DisplayVersion
-                        Publisher = $Program.Publisher
-                        InstallDate = $Program.InstallDate
-                    }
-                    New-Object -TypeName PSObject -Property $Info
-                }
+				Invoke-Command -Computer $Name -ScriptBlock {
+					$Hklm = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
+					$Programs = Get-ItemProperty -Path $Hklm
+					ForEach ($Program in $Programs) {
+						$Info = [ordered]@{
+							Name = $Program.DisplayName
+							Version = $Program.DisplayVersion
+							Publisher = $Program.Publisher
+							InstallDate = $Program.InstallDate
+						}
+						New-Object -TypeName PSObject -Property $Info
+					}
+				}
             }
             Catch {
                 Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
