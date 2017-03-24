@@ -3,10 +3,10 @@
 function Get-DisplayInformation {
 <#
 .SYNOPSIS
-	This function gets a list of names for all computers in Active Directory.
+	This function gets the display information from a local or remote machine.
 
 .DESCRIPTION
-	This function gets a list of names for all computers in Active Directory.
+	This function gets the display information from a local or remote machine.
 
 .EXAMPLE
 	Get-DisplayInformation -ComputerName COMPUTER01
