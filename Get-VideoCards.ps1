@@ -3,10 +3,10 @@
 function Get-VideoCards {
 <#
 .SYNOPSIS
-	This function gets a list of names for all computers in Active Directory.
+	This function gets a list of video cards from a local or remote machine.
 
 .DESCRIPTION
-	This function gets a list of names for all computers in Active Directory.
+	This function gets a list of video cards from a local or remote machine.
 
 .EXAMPLE
 	Get-DisplayInformation -ComputerName COMPUTER01
@@ -36,6 +36,7 @@ function Get-VideoCards {
                     CimSession = $CimSession
                 }
                 $VideoCards = Get-CimInstance @VideoCardSplatting
+                Write-Host $Name
                 ForEach ($Card in $VideoCards) {
                     [pscustomobject]@{
                         Name = $Card.Caption
