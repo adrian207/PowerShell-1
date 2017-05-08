@@ -29,16 +29,16 @@ function Get-FreeSpace {
 	)
 	
 	process {
-		Try {
-			ForEach ($Computer in $ComputerName) {
+		ForEach ($Computer in $ComputerName) {
+			Try {
 				$name = $Computer.ToUpper()
 				Write-Verbose -Message ( "{0}: Getting disk space information" -f $name )
+
 				$splatting = @{
 					Class = "Win32_LogicalDisk"
 					Filter = "drivetype='3'"
 					ComputerName = $name
 				}
-				
 				$disks = Get-WmiObject @splatting
 				ForEach ($disk in $disks) {
 					$object = New-Object PSObject -Property @{
@@ -49,12 +49,10 @@ function Get-FreeSpace {
 					$object
 				}
 			}
+			Catch {
+				Write-Warning -Message ( "{0}: Something bad happened" -f $name )
+				Write-Warning -Message $Error[0].Exception.Message
+			}
 		}
-		Catch {
-			Write-Warning -Message ( "{0}: Something bad happened" -f $name )
-			Write-Warning -Message $Error[0].Exception.Message
-		}
-		
 	}
-	
 }
