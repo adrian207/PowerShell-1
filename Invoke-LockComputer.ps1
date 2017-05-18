@@ -1,5 +1,4 @@
-function Invoke-LockComputer
-{
+function Invoke-LockComputer {
 <#
 .SYNOPSIS
 	This function locks a local or remote machine.
