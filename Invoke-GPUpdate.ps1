@@ -23,25 +23,23 @@ function Invoke-GPUpdate {
 
 	[CmdletBinding()]
 	
-	param(
+	Param(
 		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
-	process {
+	Process {
 		ForEach ($Computer in $ComputerName) {
-			$name = $Computer.ToUpper()
-			Write-Verbose -Message ( "{0}: Invoking gpupdate /force" -f $name )
+			$Name = $Computer.ToUpper()
+			Write-Verbose -Message ( "{0}: Invoking gpupdate /force" -f $Name )
 			
-			$splatting = @{
+			$Splatting = @{
 				Class = "Win32_Process"
 				Name = "Create"
 				ArgumentList = "gpupdate /force"
-				ComputerName = $name
+				ComputerName = $Name
 			}
-			Invoke-WmiMethod @splatting | Out-Null
-		}
-		
+			Invoke-WmiMethod @Splatting | Out-Null
+		}	
 	}
-	
 }
