@@ -22,7 +22,7 @@
 	
 	Process {
 		Try {
-            Write-Verbose -Message "[ConvertTo-Base64] Converting image to Base64 $Object"
+            Write-Verbose -Message "PROCESS - Converting unicode to base64 $Object"
 	        [System.convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($Object))
         }
 		Catch {
@@ -58,7 +58,7 @@ function Decode-Base64 {
 	
 	Process {
 		Try {
-            Write-Verbose -Message "[ConvertTo-Base64] Converting image to Base64 $Object"
+            Write-Verbose -Message "PROCESS - Converting base64 to unicode $Object"
             [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Object))
         }
 		Catch {
