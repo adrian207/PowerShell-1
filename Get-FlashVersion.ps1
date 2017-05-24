@@ -24,23 +24,30 @@ function Get-FlashVersion {
 	[CmdletBinding()]
 
 	param(
-		[parameter(ValueFromPipeline=$True)]
-		[string[]]$ComputerName = $Env:ComputerName
+		[Parameter(ValueFromPipeline=$True)]
+		[string[]]$ComputerName = $Env:ComputerName,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        [System.Management.Automation.Credential()]
+        $Credentials
 	)
     
 	process {
-		ForEach ($Computer in $ComputerName) {
+		foreach ($Computer in $ComputerName) {
 			$Name = $Computer.ToUpper()
 			Write-Verbose -Message ("PROCESS - {0} - Getting Flash version" -f $Name)
-			If ( Test-Connection -ComputerName $Name -Count 1 -ErrorAction SilentlyContinue ) {
+
+			if ( Test-Connection -ComputerName $Name -Count 1 -ErrorAction SilentlyContinue ) {
 				$Filename = "\\{0}\c$\windows\system32\macromed\flash\flash*.ocx" -f $Name
-				If (Test-Path $Filename) {
+
+				if (Test-Path $Filename) {
 					$File = Get-Item $Filename
 					$Version = $file.versionInfo.fileversion -replace ",","."
 				}
-				Else { $Version = "Not Installed" }
+				else { $Version = "Not Installed" }
 			}
-			Else { $Version = "Offline" }
+			else { $Version = "Offline" }
 			
 			$Object = New-Object -TypeName PSObject -Property @{
 				ComputerName = $Name

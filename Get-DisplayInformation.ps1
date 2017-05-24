@@ -17,18 +17,23 @@ function Get-DisplayInformation {
 
     [CmdletBinding()]
 
-    Param(
-        [parameter(ValueFromPipeline=$True)]
-        [String[]]$ComputerName = $env:ComputerName
+    param(
+        [Parameter(ValueFromPipeline=$true)]
+        [String[]]$ComputerName = $env:ComputerName,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        [System.Management.Automation.Credential()]
+        $Credentials
     )
 
-    Process {
-        ForEach ($Computer in $ComputerName) {
-            Try {
+    process {
+        foreach ($Computer in $ComputerName) {
+            try {
                 $Name = $Computer.ToUpper()
                 Write-Verbose -Message ( "PROCESS - {0} - Getting display information" -f $Name )
                 
-				$CimSession = New-CimSession -ComputerName $Name
+				$CimSession = New-CimSession -ComputerName $Name -Credential $Credentials
 
                 # Get monitor information
 				$Splatting = @{
@@ -38,7 +43,7 @@ function Get-DisplayInformation {
 				}
                 $Monitors = Get-CimInstance @Splatting
 
-                ForEach ($Monitor in $Monitors) {
+                foreach ($Monitor in $Monitors) {
                     [pscustomobject]@{
                         Name = ($Monitor.UserFriendlyName -notmatch '^0$' | ForEach {[char]$_}) -join ""
                         Manufacturer = ($Monitor.ManufacturerName -notmatch '^0$' | ForEach {[char]$_}) -join ""
@@ -46,7 +51,7 @@ function Get-DisplayInformation {
                     }
                 }
             }
-            Catch {
+            catch {
                 Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 				Write-Warning -Message $Error[0].Exception.Message
             }

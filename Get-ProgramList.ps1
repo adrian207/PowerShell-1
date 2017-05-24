@@ -18,21 +18,21 @@ function Get-ProgramList {
 	Get-Content C:\computers.txt | Get-ProgramList
 #>
 
-    Param(
-        [parameter(ValueFromPipeline=$True)]
+    param(
+        [Parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
     )
 
-    Process {
-        ForEach ($Computer in $ComputerName) {
-            Try {
+    process {
+        foreach ($Computer in $ComputerName) {
+            try {
                 $Name = $Computer.ToUpper()
                 Write-Verbose -Message ( "PROCESS - {0} - Getting program list" -f $Name )
                 
 				Invoke-Command -Computer $Name -ScriptBlock {
 					$Hklm = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
 					$Programs = Get-ItemProperty -Path $Hklm
-					ForEach ($Program in $Programs) {
+					foreach ($Program in $Programs) {
 						$Info = [ordered]@{
 							Name = $Program.DisplayName
 							Version = $Program.DisplayVersion
@@ -43,7 +43,7 @@ function Get-ProgramList {
 					}
 				}
             }
-            Catch {
+            catch {
                 Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
                 Write-Warning -Message $Error[0].Exception.Message
             }

@@ -1,35 +1,40 @@
 function Invoke-GPUpdate {
-	<#
-	.SYNOPSIS
-		This function forces Group Policy settings to update on a local or remote machine.
+<#
+.SYNOPSIS
+	This function forces Group Policy settings to update on a local or remote machine.
 		
-	.DESCRIPTION
-		This function forces Group Policy settings to update on a local or remote machine.
+.DESCRIPTION
+	This function forces Group Policy settings to update on a local or remote machine.
 		
-	.PARAMETER ComputerName
+.PARAMETER ComputerName
 	
-	.EXAMPLE
-		Invoke-GPUpdate
+.EXAMPLE
+	Invoke-GPUpdate
 		
-	.EXAMPLE
-		Invoke-GPUpdate -ComputerName Computer1
+.EXAMPLE
+	Invoke-GPUpdate -ComputerName Computer1
 		
-	.EXAMPLE
-		Invoke-GPUpdate -ComputerName Computer1,Computer2,Computer3
+.EXAMPLE
+	Invoke-GPUpdate -ComputerName Computer1,Computer2,Computer3
 		
-	.EXAMPLE
-		Get-Content C:\computers.txt | Invoke-GPUpdate
-	#>
+.EXAMPLE
+	Get-Content C:\computers.txt | Invoke-GPUpdate
+#>
 
 	[CmdletBinding()]
 	
-	Param(
-		[parameter(ValueFromPipeline=$True)]
-		[string[]]$ComputerName = $Env:ComputerName
+	param(
+		[Parameter(ValueFromPipeline=$True)]
+		[String[]]$ComputerName = $Env:ComputerName,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        [System.Management.Automation.Credential()]
+        $Credentials
 	)
 	
-	Process {
-		ForEach ($Computer in $ComputerName) {
+	process {
+		foreach ($Computer in $ComputerName) {
 			$Name = $Computer.ToUpper()
 			Write-Verbose -Message ( "{0}: Invoking gpupdate /force" -f $Name )
 			
@@ -38,6 +43,7 @@ function Invoke-GPUpdate {
 				Name = "Create"
 				ArgumentList = "gpupdate /force"
 				ComputerName = $Name
+                Credential = $Credentials
 			}
 			Invoke-WmiMethod @Splatting | Out-Null
 		}	
