@@ -24,7 +24,7 @@ function Invoke-DiskCleanup {
 	[CmdletBinding()]
 	
 	Param(
-		[parameter(ValueFromPipeline=$True)]
+		[parameter(ValueFromPipeline=$true)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
@@ -103,7 +103,7 @@ function Remove-SoftwareDistribution {
 	[CmdletBinding()]
 	
 	param(
-		[parameter(ValueFromPipeline=$True)]
+		[parameter(ValueFromPipeline=$true)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
@@ -117,7 +117,7 @@ function Remove-SoftwareDistribution {
 					$SoftwareDistribution = Join-Path -Path $Env:WinDir -ChildPath SoftwareDistribution
 					$Splatting = @{
 						Path = $SoftwareDistribution
-						Recurse = $True
+						Recurse = $true
 					}
 					Remove-Item @Splatting
 
@@ -158,7 +158,7 @@ function Remove-CBSLogs {
 	[CmdletBinding()]
 	
 	param(
-		[parameter(ValueFromPipeline=$True)]
+		[parameter(ValueFromPipeline=$true)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
@@ -172,7 +172,7 @@ function Remove-CBSLogs {
 					$Cbs = Join-Path -Path $Env:WinDir -ChildPath "Logs\CBS"
 					$Splatting = @{
 						Path = $SoftwareDistribution
-						Recurse = $True
+						Recurse = $true
 					}
 					Remove-Item @Splatting
 
