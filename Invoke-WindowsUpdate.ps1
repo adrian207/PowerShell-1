@@ -23,14 +23,14 @@ function Invoke-DetectNow {
 	
 	[CmdletBinding()]
 	
-	Param(
+	param(
 		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
-	Process {
-		ForEach ($Computer in $ComputerName) {
-			Try {
+	process {
+		foreach ($Computer in $ComputerName) {
+			try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ResetAuthorization /DetectNow" -f $Name )
 
@@ -42,10 +42,10 @@ function Invoke-DetectNow {
 				}
 				Invoke-CimMethod @Splatting
 			}
-			Catch {
+			catch {
 				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 				Write-Warning -Message $Error[0].Exception.Message
-		    	}
+		    }
 		}
 	}
 }
@@ -75,14 +75,14 @@ function Invoke-ReportNow {
 		
 	[CmdletBinding()]
 	
-	Param(
-		[parameter(ValueFromPipeline=$True)]
-		[string[]]$ComputerName = $Env:ComputerName
+	param(
+		[Parameter(ValueFromPipeline=$True)]
+		[String[]]$ComputerName = $Env:ComputerName
 	)
 	
-	Process {
-        	ForEach ($Computer in $ComputerName) {
-			Try {
+	process {
+        foreach ($Computer in $ComputerName) {
+			try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /ReportNow" -f $Name )
                 
@@ -94,7 +94,7 @@ function Invoke-ReportNow {
 				}
 				Invoke-CimMethod @Splatting
 			}
-			Catch {
+			catch {
 				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 				Write-Warning -Message $Error[0].Exception.Message
 			}
@@ -127,14 +127,14 @@ function Invoke-UpdateNow {
 		
 	[CmdletBinding()]
 	
-	Param(
-		[parameter(ValueFromPipeline=$True)]
-		[string[]]$ComputerName = $Env:ComputerName
+	param(
+		[Parameter(ValueFromPipeline=$True)]
+		[String[]]$ComputerName = $Env:ComputerName
 	)
 	
-	Process {
-		ForEach ($Computer in $ComputerName) {
-			Try {
+	process {
+		foreach ($Computer in $ComputerName) {
+			try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCESS - {0} - Invoking wuauclt.exe /UpdateNow" -f $Name )
                 
@@ -146,7 +146,7 @@ function Invoke-UpdateNow {
 				}
 				Invoke-CimMethod @Splatting
 			}
-            		Catch {
+            catch {
 				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 				Write-Warning -Message $Error[0].Exception.Message
             		}	
