@@ -37,7 +37,8 @@ function Invoke-DetectNow {
 				$Splatting = @{
 					CimClass = (Get-CimClass -ClassName Win32_Process)
 					MethodName = "Create"
-					Arguments = "wuauclt.exe /ResetAuthorization /DetectNow"
+					Arguments = @{ CommandLine = 'wuauclt.exe /ResetAuthorization /DetectNow';
+									CurrentDirectory = "C:\windows\system32" }
 					ComputerName = $Name
 				}
 				Invoke-CimMethod @Splatting
@@ -89,7 +90,8 @@ function Invoke-ReportNow {
 				$Splatting = @{
 					CimClass = (Get-CimClass -ClassName Win32_Process)
 					MethodName = "Create"
-					Arguments = "wuauclt.exe /ReportNow"
+					Arguments = @{ CommandLine = 'wuauclt.exe /ReportNow';
+									CurrentDirectory = "C:\windows\system32" }
 					ComputerName = $Name
 				}
 				Invoke-CimMethod @Splatting
@@ -141,7 +143,8 @@ function Invoke-UpdateNow {
 				$Splatting = @{
 					CimClass = (Get-CimClass -ClassName Win32_Process)
 					MethodName = "Create"
-					Arguments = "wuauclt.exe /UpdateNow"
+					Arguments = @{ CommandLine = 'wuauclt.exe /UpdateNow';
+									CurrentDirectory = "C:\windows\system32" }
 					ComputerName = $Name
 				}
 				Invoke-CimMethod @Splatting

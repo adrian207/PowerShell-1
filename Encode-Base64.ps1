@@ -1,4 +1,4 @@
-﻿function Encode-Base64 {
+function Encode-Base64 {
 <#
 .SYNOPSIS
 	This function takes a string and encodes it to base64.
@@ -7,18 +7,20 @@
 	This function takes a string and encodes it to base64.
 
 .EXAMPLE
-    Encode-Base64 "The quick brown fox jumps over the lazy dog."
+	Encode-Base64 "The quick brown fox jumps over the lazy dog."
+    
+	VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4=
 
 .EXAMPLE
 	Out-File -FilePath c:\something.txt | Encode-Base64
 #>
 
 	[CmdletBinding()]
-	
+
 	Param(
-        [Parameter(ValueFromPipeline = $True)]
+	[Parameter(ValueFromPipeline = $True)]
 		[String]$Object
-    )
+	)
 	
 	Process {
 		Try {
@@ -41,9 +43,9 @@ function Decode-Base64 {
 	This function takes a base64 string and decodes it.
 
 .EXAMPLE
-    Decode-Base64 VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4=
+	Decode-Base64 VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4=
 
-    The quick brown fox jumps over the lazy dog.
+	The quick brown fox jumps over the lazy dog.
 
 .EXAMPLE
 	Out-File -FilePath c:\something.txt | Decode-Base64
@@ -52,9 +54,9 @@ function Decode-Base64 {
 	[CmdletBinding()]
 	
 	Param(
-        [Parameter(ValueFromPipeline = $True)]
+        	[Parameter(ValueFromPipeline = $True)]
 		[String]$Object
-    )
+    	)
 	
 	Process {
 		Try {
