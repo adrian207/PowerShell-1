@@ -15,21 +15,24 @@
 
 	[CmdletBinding()]
 	
-	param()
+	param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        [System.Management.Automation.Credential()]
+        $Credentials
+    )
 	
 	process {
-		Try {
-			$Cred = Get-Credential
-		
+		try {		
 			Write-Verbose ("PROCESS - Retrieving list of computer names in Active Directory")
 			$Splatting = @{
 				Filter = "OperatingSystem -NotLike '*server*'"
-				Credential = $Cred
+				Credential = $Credentials
 			}
 			$ComputerName = Get-ADComputer @Splatting
 			$ComputerName.Name.ToUpper()
 		}
-		Catch {
+		catch {
 			Write-Warning "PROCESS - Something bad happened"
 			Write-Warning -Message $Error[0].Exception.Message
 		}
