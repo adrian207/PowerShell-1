@@ -12,14 +12,14 @@ function Get-FreeSpace {
 	Get-FreeSpace
 		
 .EXAMPLE
-	Get-FreeSpace -ComputerName Server1
+	Get-FreeSpace -ComputerName SERVER01
 		
 .EXAMPLE
-	Get-FreeSpace -ComputerName Server1,Server2,Server3
+	Get-FreeSpace -ComputerName SERVER01,SERVER02,SERVER03
 		
 .EXAMPLE
 	Get-Content C:\computers.txt | Get-FreeSpace
-	#>
+#>
 
 	[CmdletBinding()]
 	
@@ -49,7 +49,8 @@ function Get-FreeSpace {
 					[pscustomobject]@{
 						ComputerName = $Name
 						Drive = $Disk.DeviceID
-						FreeSpace = "{0} GB" -f [math]::round($Disk.freespace / 1GB)
+						Size = $Disk.Size
+						FreeSpace = "{0} GB" -f [math]::round($Disk.FreeSpace / 1GB)
 					}
 				}
 			}
