@@ -23,14 +23,14 @@ function Invoke-LockComputer {
 
 	[CmdletBinding()]
 	
-	Param(
+	param(
 		[parameter(ValueFromPipeline=$True)]
 		[string[]]$ComputerName = $Env:ComputerName
 	)
 	
-	Process {
-		ForEach ($Computer in $ComputerName) {
-			Try {
+	process {
+		foreach ($Computer in $ComputerName) {
+			try {
 				$Name = $Computer.ToUpper()
 				Write-Verbose -Message ( "PROCCESS - {0} - Locking the screen" -f $Name )
 				$CimClass = Get-CimClass -ClassName Win32_Process
@@ -42,7 +42,7 @@ function Invoke-LockComputer {
 				}
 				Invoke-CimMethod @Splatting
 			}
-			Catch {
+			catch {
 				Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
 				Write-Warning -Message $Error[0].Exception.Message
 			}
