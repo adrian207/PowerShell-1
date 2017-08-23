@@ -16,41 +16,29 @@ function Watch-Folder {
 
     param(
         [Parameter(Mandatory=$true)]
-        [String]$Path,
+        [String]$Command,
         [Parameter(Mandatory=$false)]
-        [Int32]$Timer = 1000
+        [Int32]$Timer = 2
     )
 
     process {
-        if (Test-Path -Path $Path) {
-
-            #$Items = Get-ChildItem -Path $Path | Select-Object -ExcludeProperty "Name"
-
-            try {
-                $Watcher = New-Object -TypeName System.IO.FileSystemWatcher
-                $Watcher.Path = $Path
-
-                while ($true) {
-                    $Result = $Watcher.WaitForChanged([System.IO.WatcherChangeTypes]::All, $Timer)
-                    
-                    if ($Result.TimedOut) {
-		                continue;
-	                }
-					
-                    $Splatting = @{
-                        Object = ( "File {0} has been {1}" -f $Result.Name, $Result.ChangeType )
-                    }
-
-                    Write-Host @Splatting
-                }
-            }
-            Catch {
-                Write-Warning -Message ( "PROCESS - Something bad happened" )
-			    Write-Warning -Message $Error[0].Exception.Message
-            }
+        try {
+			$ScriptBlock = [ScriptBlock]::Create($Command)
+			
+			while ($true) {
+				Clear-Host
+				
+				$timestamp = Get-Date -format "ddd MMM H:mm:ss yyyy"
+				Write-Host ( "Every {0:N1}s: {1} {2,50}" -f $Timer,$Command,$timestamp )
+				
+				Invoke-Command -ScriptBlock $ScriptBlock | Out-Host
+				
+				Start-Sleep -Seconds $Timer
+			}
         }
-        else {
-            #error correction for invalid path
+        catch {
+            Write-Warning -Message ( "PROCESS - Something bad happened" )
+			Write-Warning -Message $Error[0].Exception.Message
         }
     }
 }
