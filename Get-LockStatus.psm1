@@ -1,5 +1,5 @@
 #Requires -Version 2 
-function Get-LockStatus { 
+function Get-ADLockStatus { 
 <#
 .SYNOPSIS
     This function checks if an AD account is locked and if it is, it prompts to unlock.
@@ -25,15 +25,11 @@ function Get-LockStatus {
     )
 
     process {
-        foreach ($Id in $Identity) {
-            $Splatting = @{
-                Identity = $Id
-                Property = "SamAccountName", "LockedOut", "LastLogonDate"
-            }
-            $Object = Get-ADUser @Splatting
+        foreach ($_ in $Identity) {
+            $Object = Get-ADUser -Identity $_ -Property @{"SamAccountName", "LockedOut", "LastLogonDate"}
 
             if ( $Object.LockedOut -ne $false ) {
-                Unlock-ADAccount -Identity $Id -Confirm
+                Unlock-ADAccount -Identity $_ -Confirm
             }
             else {
                 Write-Warning -Message ( "{0} is not locked out" -f $Object.SamAccountName )
