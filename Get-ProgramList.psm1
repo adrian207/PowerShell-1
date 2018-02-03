@@ -22,28 +22,38 @@ function Get-ProgramList {
 #>
 
     param(
-        [Parameter(ValueFromPipeline=$True)]
+        [Parameter(ValueFromPipeline=$true)]
 		[string[]]$ComputerName = $env:ComputerName
     )
 
-    process {
-		$Splatting = @{
+	begin {
+		$GetCimInstanceParams = @{
 			ClassName = "Win32_Product"
 			Property  = "InstallDate"
 		}
+		$Count = $ComputerName.count
+	}
 
-		foreach ($Computer in $ComputerName) {
-			$Name = $Computer.ToUpper()
-			Write-Verbose -Message ( "PROCESS - {0} - Getting program list" -f $Name )
+    process {
+		for ($i = 0; $i -lt $Count; $i++) {
+			$Name = ($ComputerName[$i]).ToUpper()
+			$PercentComplete = $i / $Count*100
+
+			$WriteProgressParams = @{
+				Activity        = "Searching Program List for {0}" -f $Name
+				Status          = "{0}% Complete->" -f $PercentComplete
+				PercentComplete = $PercentComplete
+			}
+			Write-Progress @WriteProgressParams
 
 			if ($Name -ne $env:ComputerName) {
-				$Splatting.ComputerName = $Name
+				$GetCimInstanceParams.ComputerName = $Name
 			}
 			else {
-				$Splatting.ComputerName = $null
+				$GetCimInstanceParams.ComputerName = $null
 			}
 			
-			$Programs = Get-CimInstance @Splatting
+			$Programs = Get-CimInstance @GetCimInstanceParams
 			foreach ($Program in $Programs) {
 				$Property = [ordered]@{
 					Name        = $Program.Name
