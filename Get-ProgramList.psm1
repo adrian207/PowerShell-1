@@ -9,6 +9,9 @@ function Get-ProgramList {
 .PARAMETER ComputerName
 
 .EXAMPLE
+	Get-ProgramList
+
+.EXAMPLE
 	Get-ProgramList -ComputerName COMPUTER01
 
 .EXAMPLE
@@ -20,33 +23,36 @@ function Get-ProgramList {
 
     param(
         [Parameter(ValueFromPipeline=$True)]
-		[string[]]$ComputerName = $Env:ComputerName
+		[string[]]$ComputerName = $env:ComputerName
     )
 
     process {
-        foreach ($Computer in $ComputerName) {
-            try {
-                $Name = $Computer.ToUpper()
-                Write-Verbose -Message ( "PROCESS - {0} - Getting program list" -f $Name )
-                
-				Invoke-Command -Computer $Name -ScriptBlock {
-					$Hklm = "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
-					$Programs = Get-ItemProperty -Path $Hklm
-					foreach ($Program in $Programs) {
-						$Info = [ordered]@{
-							Name = $Program.DisplayName
-							Version = $Program.DisplayVersion
-							Publisher = $Program.Publisher
-							InstallDate = $Program.InstallDate
-						}
-						New-Object -TypeName PSObject -Property $Info
-					}
+		$Splatting = @{
+			ClassName = "Win32_Product"
+			Property  = "InstallDate"
+		}
+
+		foreach ($Computer in $ComputerName) {
+			$Name = $Computer.ToUpper()
+			Write-Verbose -Message ( "PROCESS - {0} - Getting program list" -f $Name )
+
+			if ($Name -ne $env:ComputerName) {
+				$Splatting.ComputerName = $Name
+			}
+			else {
+				$Splatting.ComputerName = $null
+			}
+			
+			$Programs = Get-CimInstance @Splatting
+			foreach ($Program in $Programs) {
+				$Property = [ordered]@{
+					Name        = $Program.Name
+					Vendor      = $Program.Vendor
+					Version     = $Program.Version
+					InstallDate = $Program.InstallDate
 				}
-            }
-            catch {
-                Write-Warning -Message ( "PROCESS - {0} - Something bad happened" -f $Name )
-                Write-Warning -Message $Error[0].Exception.Message
-            }
+				New-Object -TypeName "PSObject" -Property $Property
+			}
         }
     }
 }
