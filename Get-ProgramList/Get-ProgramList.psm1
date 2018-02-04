@@ -28,8 +28,8 @@ function Get-ProgramList {
 
 	begin {
 		$GetCimInstanceParams = @{
-			ClassName = "Win32_Product"
-			Property  = "InstallDate"
+			ClassName = 'Win32_Product'
+			Property  = 'InstallDate'
 		}
 		$Count = $ComputerName.count
 	}
@@ -61,7 +61,7 @@ function Get-ProgramList {
 					Version     = $Program.Version
 					InstallDate = $Program.InstallDate
 				}
-				New-Object -TypeName "PSObject" -Property $Property
+				New-Object -TypeName 'PSObject' -Property $Property
 			}
         }
     }
