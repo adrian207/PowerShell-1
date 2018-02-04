@@ -1,5 +1,20 @@
 function Test-TcpConnect {
-<#
+<#<#
+.SYNOPSIS
+Short description
+
+.DESCRIPTION
+Long description
+
+.PARAMETER ComputerName
+Parameter description
+
+.EXAMPLE
+An example
+
+.NOTES
+General notes
+#>
 .SYNOPSIS
     This function 
 
@@ -50,8 +65,8 @@ function Test-TcpConnect {
                 $Result = Test-NetConnection @Splatting
 
                 New-Object -TypeName 'PSCustomObject' -Property @{
-                    'Remote Port'        = $Result.RemotePort
-                    'TCP Test Succeeded' = $Result.TcpTestSucceeded
+                    'Remote Port'   = $Result.RemotePort
+                    'TCP Handshake' = $Result.TcpTestSucceeded
                 }
             }
         }
