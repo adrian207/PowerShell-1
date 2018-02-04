@@ -75,19 +75,19 @@ function Get-CompatibilityAssistant {
                 }
             }
             else {
-                Write-Warning -Message ("{0} path does not exist" -f $RegistryKeyPath)
+                Write-Warning -Message ("PROCESS - {0} path does not exist" -f $RegistryKeyPath)
             }
         }
     }
 }
 
-function Get-FileProperty  {
+function Get-FileProperty {
 <#
 .SYNOPSIS
-    This function returns certain file properties.
+    This function returns file properties.
 
 .DESCRIPTION
-    This function returns certain file properties.
+    This function returns file properties.
 
 .EXAMPLE
     Get-FileProperty -Path c:\windows\system32\calc.exe
@@ -115,5 +115,5 @@ function Get-FileProperty  {
         CompanyName       = $_.VersionInfo.CompanyName
         LastAccessTime    = $_.LastAccessTime
     }
-    New-Object -TypeName PSObject -Property $Property
+    New-Object -TypeName PSObject -Property @Property
 }
