@@ -18,7 +18,8 @@ function Get-DisplayInformation {
     [CmdletBinding()]
 
     param(
-        [Parameter(ValueFromPipeline=$true)]
+        [Parameter(
+			ValueFromPipeline=$true)]
         [String[]]$ComputerName = $env:ComputerName,
 
         [Parameter()]
