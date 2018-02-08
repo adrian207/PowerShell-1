@@ -88,20 +88,31 @@ function Get-ProgramList {
 
     begin {
         $Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*"
+        $Splatting = @{
+            ArgumentList = $Path
+        }
     }
 
     process {
         foreach ($Computer in $ComputerName) {
             $Name = $Computer.ToUpper()
-            Write-Verbose -Message ("PROCESS - {0} - Getting uninstall information..." -f $Name)
+            if ($Name -ne $env:ComputerName) {
+                $Splatting.ComputerName = $Name
+            }
+            else {
+                $Splatting.ComputerName = $null
+            }
 
-            foreach ( $_ in (Get-ItemProperty -Path $Path) ) {
-                [PSCustomObject]@{
-                    PSTypeName     = 'MyType'
-                    DisplayName    = $_.DisplayName
-                    Publisher      = $_.Publisher
-                    DisplayVersion = $_.DisplayVersion
-                    InstallDate    = $_.InstallDate
+            Write-Verbose -Message ("PROCESS - {0} - Getting uninstall information..." -f $Name)
+            Invoke-Command @Splatting -ScriptBlock {
+                foreach ( $_ in (Get-ItemProperty -Path $Path) ) {
+                    [PSCustomObject]@{
+                        PSTypeName     = 'ProgramList'
+                        DisplayName    = $_.DisplayName
+                        Publisher      = $_.Publisher
+                        DisplayVersion = $_.DisplayVersion
+                        InstallDate    = $_.InstallDate
+                    }
                 }
             }
         }
