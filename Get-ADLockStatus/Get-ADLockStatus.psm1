@@ -1,4 +1,3 @@
-#Requires -Version 5
 function Get-ADLockStatus { 
 <#
 .SYNOPSIS
@@ -25,12 +24,12 @@ function Get-ADLockStatus {
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true,
             Position=0)]
-        [string[]]
+        [string]
         $Identity
     )
 
     process {
-        foreach ($_ in $Identity) {
+        foreach ( $_ in (Get-ADUser -Identity $Identity) ) {
             [PSCustomObject]@{
                 PSTypeName             = 'ADLockStatus'
                 BadLogonCount          = $_.BadLogonCount
@@ -41,7 +40,7 @@ function Get-ADLockStatus {
                 SamAccountName         = $_.SamAccountName
             }
 
-            if ($_.LockedOut -ne $false) {
+            if ($_.LockedOut -eq $true) {
                 Unlock-ADAccount -Identity $_ -Confirm
             }
         }
