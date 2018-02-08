@@ -30,18 +30,20 @@ function Compare-InstalledPrograms {
         $DifferenceComputer,
 
         [parameter(
-            Mandatory=$true,
+            Mandatory=$false,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true,
             Position=1)]
         [string]
-        $IncludeEqual
+        $IncludeEqual = $false
     )
 
-    process {
+    begin {
         $ReferenceObject = Get-ProgramList -ComputerName $ReferenceComputer
         $DifferenceObject = Get-ProgramList -ComputerName $DifferenceComputer
+    }
 
+    process {
         $CompareObject = Compare-Object -ReferenceObject $ReferenceObject -DifferenceObject $DifferenceObject
         [PSCustomObject]@{
             PSTypeName    = 'CompareInstalledPrograms'
@@ -85,31 +87,21 @@ function Get-ProgramList {
     )
 
     begin {
-        $Splatting = @{
-            ClassName = 'Win32_Product'
-            Property  = 'InstallDate'
-        }
+        $Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*"
     }
 
     process {
         foreach ($Computer in $ComputerName) {
-
             $Name = $Computer.ToUpper()
-            if ($Name -ne $env:ComputerName) {
-                $Splatting.ComputerName = $Name
-            }
-            else {
-                $Splatting.ComputerName = $null
-            }
-            
-            Write-Verbose -Message ("PROCESS - {0} - Getting product information" -f $Name)
-            foreach ( $_ in (Get-CimInstance @Splatting) ) {
+            Write-Verbose -Message ("PROCESS - {0} - Getting uninstall information..." -f $Name)
+
+            foreach ( $_ in (Get-ItemProperty -Path $Path) ) {
                 [PSCustomObject]@{
-                    PSTypeName  = 'MyType'
-                    Name        = $_.Name
-                    Vendor      = $_.Vendor
-                    Version     = $_.Version
-                    InstallDate = $_.InstallDate
+                    PSTypeName     = 'MyType'
+                    DisplayName    = $_.DisplayName
+                    Publisher      = $_.Publisher
+                    DisplayVersion = $_.DisplayVersion
+                    InstallDate    = $_.InstallDate
                 }
             }
         }
