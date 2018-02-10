@@ -1,10 +1,10 @@
 function Compare-InstalledPrograms {
 <#
 .SYNOPSIS
-    This function 
+    This function compares a list of installed programs on two computers.
 
 .DESCRIPTION
-    This function 
+    This function compares a list of installed programs on two computers.
 
 .EXAMPLE
     Compare-InstalledPrograms -ReferenceComputer COMPUTER01 -DifferenceComputer COMPUTER02
@@ -32,29 +32,27 @@ function Compare-InstalledPrograms {
         [parameter(
             Mandatory=$false,
             ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true,
-            Position=1)]
+            ValueFromPipelineByPropertyName=$true)]
         [string]
         $IncludeEqual = $false
     )
 
     begin {
-        $ReferenceObject = Get-ProgramList -ComputerName $ReferenceComputer
-        $DifferenceObject = Get-ProgramList -ComputerName $DifferenceComputer
+        $ReferenceObject = Get-InstalledPrograms -ComputerName $ReferenceComputer
+        $DifferenceObject = Get-InstalledPrograms -ComputerName $DifferenceComputer
     }
 
     process {
         $CompareObject = Compare-Object -ReferenceObject $ReferenceObject -DifferenceObject $DifferenceObject
         [PSCustomObject]@{
             PSTypeName    = 'CompareInstalledPrograms'
-            Equals        = $CompareObject.Equals
             InputObject   = $CompareObject.InputObject
             SideIndicator = $CompareObject.SideIndicator
         }
     }
 }
 
-function Get-ProgramList {
+function Get-InstalledPrograms {
 <#
 .SYNOPSIS
     This function gets a list of programs on a local or remote machine.
@@ -65,20 +63,20 @@ function Get-ProgramList {
 .PARAMETER ComputerName
 
 .EXAMPLE
-    Get-ProgramList
+    Get-InstalledPrograms
 
 .EXAMPLE
-    Get-ProgramList -ComputerName COMPUTER01
+    Get-InstalledPrograms -ComputerName COMPUTER01
 
 .EXAMPLE
-    Get-ProgramList -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
+    Get-InstalledPrograms -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
-    Get-Content C:\computers.txt | Get-ProgramList
+    Get-Content C:\computers.txt | Get-InstalledPrograms
 #>
 
     param(
-        [Parameter(
+        [parameter(
             Mandatory=$false,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true)]
@@ -87,9 +85,8 @@ function Get-ProgramList {
     )
 
     begin {
-        $Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*"
         $Splatting = @{
-            ArgumentList = $Path
+            ArgumentList = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*'
         }
     }
 
@@ -100,14 +97,14 @@ function Get-ProgramList {
                 $Splatting.ComputerName = $Name
             }
             else {
-                $Splatting.ComputerName = $null
+                $Splatting.PSObject.Properties.Remove('ComputerName')
             }
-
+            
             Write-Verbose -Message ("PROCESS - {0} - Getting uninstall information..." -f $Name)
             Invoke-Command @Splatting -ScriptBlock {
-                foreach ( $_ in (Get-ItemProperty -Path $Path) ) {
+                foreach ( $_ in (Get-ItemProperty -Path $args[0]) ) {
                     [PSCustomObject]@{
-                        PSTypeName     = 'ProgramList'
+                        PSTypeName     = 'InstalledPrograms'
                         DisplayName    = $_.DisplayName
                         Publisher      = $_.Publisher
                         DisplayVersion = $_.DisplayVersion
