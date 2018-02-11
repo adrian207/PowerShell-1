@@ -1,10 +1,10 @@
 function Get-MuiCache {
 <#
 .SYNOPSIS
-    This function gets a list of recently executed programs.
+    This function gets a list of recently executed programs from the MUI cache.
 
 .DESCRIPTION
-    This function gets a list of recently executed programs.
+    This function gets a list of recently executed programs from the MUI cache.
 
 .EXAMPLE
     PS> Get-MuiCache | Out-File -Path c:\something.csv
@@ -16,8 +16,8 @@ function Get-MuiCache {
     
     process {
         $RegistryKeyPaths = @(
-            "HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache",
-            "HKCU:\SOFTWARE\Microsoft\Windows\ShellNoRoam\MUICache"
+            'HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache',
+            'HKCU:\SOFTWARE\Microsoft\Windows\ShellNoRoam\MUICache'
         )
 
         foreach ($RegistryKeyPath in $RegistryKeyPaths) {
@@ -27,8 +27,8 @@ function Get-MuiCache {
                 
                 foreach ($KeyProperty in $KeyProperties) {
                     switch -wildcard ($KeyProperty) {
-                        "*.FriendlyAppName" { $Split = $KeyProperty -Split(".FriendlyAppName") }
-                        "*.ApplicationCompany" { $Split = $KeyProperty -Split(".ApplicationCompany") }
+                        '*.FriendlyAppName' { $Split = $KeyProperty -Split('.FriendlyAppName') }
+                        '*.ApplicationCompany' { $Split = $KeyProperty -Split('.ApplicationCompany') }
                     }
                     
                     Get-FileProperty -Path ( Get-Item -Path $Split[0] )
@@ -44,10 +44,13 @@ function Get-MuiCache {
 function Get-CompatibilityAssistant {
 <#
 .SYNOPSIS
-    This function gets a list of recently executed programs.
+    This function gets a list of recently executed programs from the Compatibility Assistant.
 
 .DESCRIPTION
-    This function gets a list of recently executed programs.
+    This function gets a list of recently executed programs from the Compatibility Assistant.
+
+.EXAMPLE
+    PS> Get-CompatibilityAssistant
 
 .EXAMPLE
     PS> Get-CompatibilityAssistant | Out-File -Path c:\something.csv
@@ -59,8 +62,8 @@ function Get-CompatibilityAssistant {
 
     process {
         $RegistryKeyPaths = @(
-            "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Persisted",
-            "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store"
+            'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Persisted',
+            'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store'
         )
 
         foreach ($RegistryKeyPath in $RegistryKeyPaths) {
@@ -69,9 +72,7 @@ function Get-CompatibilityAssistant {
                 $KeyProperties = Select-Object -InputObject $InputObject -ExpandProperty Property
                 
                 foreach ($KeyProperty in $KeyProperties) {
-                    if (Test-Path -Path $KeyProperty) {
-                        Get-FileProperty -Path (Get-Item -Path $KeyProperty)
-                    }
+                    Get-FileProperty -Path (Get-Item -Path $KeyProperty)
                 }
             }
             else {
@@ -96,13 +97,18 @@ function Get-FileProperty {
     [CmdletBinding()]
 
     param(
-        [parameter(Mandatory=$true)]
-        [string]$Path
+        [parameter(
+            Mandatory=$true,
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true)]
+        [string]
+        $Path
     )
 
     $_ = Get-Item -Path $Path
     
-    $Property = [ordered]@{
+    [PSCustomObject]@{
+        TypeName          = 'MyType'
         FullName          = $_.FullName
         LastWriteTime     = $_.LastWriteTime
         CreationTime      = $_.CreationTime
@@ -115,5 +121,4 @@ function Get-FileProperty {
         CompanyName       = $_.VersionInfo.CompanyName
         LastAccessTime    = $_.LastAccessTime
     }
-    New-Object -TypeName PSObject -Property @Property
 }
