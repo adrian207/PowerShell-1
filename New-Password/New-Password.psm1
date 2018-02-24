@@ -19,7 +19,10 @@ function New-Password {
     Default is 1.
 
 .EXAMPLE
-    New-Password
+    PS> New-Password
+
+.EXAMPLE
+    PS> New-Password -Length 15 -NumberOfNonAlphanumericCharacters 1 -Count 6
 #>
 
     [CmdletBinding()]
@@ -27,27 +30,27 @@ function New-Password {
     param (
         [parameter(
             Mandatory=$false,
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true)]
+            ValueFromPipelineByPropertyName=$true,
+            Position=0)]
         [int32]
         $Length = 12,
         
         [parameter(
             Mandatory=$false,
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true)]
+            ValueFromPipelineByPropertyName=$true,
+            Position=1)]
         [int32]
         $NumberOfNonAlphanumericCharacters = 5,
         
         [parameter(
             Mandatory=$false,
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true)]
+            ValueFromPipelineByPropertyName=$true,
+            Position=2)]
         [int32]
         $Count = 1
-	)
+    )
     
-    process    {
+    process {
         Add-Type -AssemblyName System.Web
         
         for ($i = 1; $i -le $Count; $i++) {
