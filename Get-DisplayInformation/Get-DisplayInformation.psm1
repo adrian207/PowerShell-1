@@ -48,10 +48,26 @@
 
             Write-Verbose -Message ( "{0} - Getting display information" -f $Name )
             foreach ( $_ in (Get-CimInstance @Splatting) ) {
-
-                switch ($_.ManufacturerName) {
-                    condition { $ManufacturerName = '' }
-                    Default { $ManufacturerName = 'Unknown' }
+                switch ( (($_.ManufacturerName -notmatch '^0$' | ForEach {[char]$_}) -join '') ) {
+                    # https://community.spiceworks.com/how_to/148349-get-desktop-monitor-information-powershell-script
+                    'AAC' { $ManufacturerName = 'AcerView'; break }
+                    {($_ -eq 'ACR') -or ($_ -eq 'CMO')} { $ManufacturerName = 'Acer'; break }
+                    {($_ -eq 'ACI') -or ($_ -eq 'AUO')} { $ManufacturerName = 'Asus'; break }
+                    'APP' { $ManufacturerName = 'Apple Computer'; break }
+                    'CPQ' { $ManufacturerName = 'Compaq'; break }
+                    'DEL' { $ManufacturerName = 'Dell'; break }
+                    'HWP' { $ManufacturerName = 'HP'; break }
+                    'LEN' { $ManufacturerName = 'Lenovo' }
+                    {($_ -eq 'SAN') -or ($_ -eq 'SAM')} { $ManufacturerName = 'Samsung'; break }
+                    'SNY' { $ManufacturerName = 'Sony'; break }
+                    'SRC' { $ManufacturerName = 'Shamrock'; break }
+                    'SUN' { $ManufacturerName = 'Sun Microsystems'; break }
+                    'SEC' { $ManufacturerName = 'Hewlett-Packard'; break }
+                    'TAT' { $ManufacturerName = 'Tatung'; break }
+                    {($_ -eq 'TOS') -or ($_ -eq 'TSB')} { $ManufacturerName = 'Toshiba'; break }
+                    'VSC' { $ManufacturerName = 'ViewSonic'; break }
+                    '_YV' { $ManufacturerName = 'Fujitsu'; break }
+                    Default { $ManufacturerName = 'Unknown'; break }
                 }
 
                 [PSCustomObject]@{
@@ -59,7 +75,7 @@
                     ComputerName      = $Name
                     InstanceName      = $_.InstanceName
                     UserFriendlyName  = ($_.UserFriendlyName -notmatch '^0$' | ForEach {[char]$_}) -join ''
-                    ManufacturerName  = ($_.ManufacturerName -notmatch '^0$' | ForEach {[char]$_}) -join ''
+                    ManufacturerName  = $ManufacturerName
                     ProductCodeID     = ($_.ProductCodeID -notmatch '^0$' | ForEach {[char]$_}) -join ''
                     SerialNumberID    = ($_.SerialNumberID -notmatch '^0$' | ForEach {[char]$_}) -join ''
                     WeekOfManufacture = $_.WeekOfManufacture
@@ -93,18 +109,18 @@ function Get-MonitorConnection {
             if ($InstanceName -eq $_.InstanceName) {
                 # https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/content/d3dkmdt/ne-d3dkmdt-_d3dkmdt_video_output_technology
                 switch ($_.VideoOutputTechnology) {
-                    -2 { $OutputType = 'Uninitialized' }
-                    0 { $OutputType = 'VGA' }
-                    1 { $OutputType = 'S-Video' }
-                    2 { $OutputType = 'Composite Video' }
-                    3 { $OutputType = 'Component Video' }
-                    4 { $OutputType = 'DVI' }
-                    5 { $OutputType = 'HDMI' }
-                    6 { $OutputType = 'LVDS' }
+                    -2 { $OutputType = 'Uninitialized'; break }
+                    0 { $OutputType = 'VGA'; break }
+                    1 { $OutputType = 'S-Video'; break }
+                    2 { $OutputType = 'Composite Video'; break }
+                    3 { $OutputType = 'Component Video'; break }
+                    4 { $OutputType = 'DVI'; break }
+                    5 { $OutputType = 'HDMI'; break }
+                    6 { $OutputType = 'LVDS'; break }
                     # 8 { $OutputType = 'D_JPN' }
-                    9 { $OutputType = 'SDI' }
-                    10 { $OutputType = 'DisplayPort External' }
-                    11 { $OutputType = 'DisplayPort' }
+                    9 { $OutputType = 'SDI'; break }
+                    10 { $OutputType = 'DisplayPort External'; break }
+                    11 { $OutputType = 'DisplayPort'; break }
                     Default { $OutputType = 'Other' }
                 }
                 $OutputType
