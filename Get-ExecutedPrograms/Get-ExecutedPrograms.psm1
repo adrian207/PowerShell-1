@@ -31,7 +31,7 @@ function Get-MuiCache {
                         '*.ApplicationCompany' { $Split = $KeyProperty -Split('.ApplicationCompany') }
                     }
                     
-                    Get-FileProperty -Path ( Get-Item -Path $Split[0] )
+                    Get-FileInformation -Path ( Get-Item -Path $Split[0] )
                 }
             }
             else {
@@ -72,7 +72,7 @@ function Get-CompatibilityAssistant {
                 $KeyProperties = Select-Object -InputObject $InputObject -ExpandProperty Property
                 
                 foreach ($KeyProperty in $KeyProperties) {
-                    Get-FileProperty -Path (Get-Item -Path $KeyProperty)
+                    Get-FileInformation -Path (Get-Item -Path $KeyProperty)
                 }
             }
             else {
@@ -82,7 +82,7 @@ function Get-CompatibilityAssistant {
     }
 }
 
-function Get-FileProperty {
+function Get-FileInformation {
 <#
 .SYNOPSIS
     This function returns file properties.
@@ -91,7 +91,7 @@ function Get-FileProperty {
     This function returns file properties.
 
 .EXAMPLE
-    Get-FileProperty -Path c:\windows\system32\calc.exe
+    Get-FileInformation -Path c:\windows\system32\calc.exe
 #>
 
     [CmdletBinding()]
@@ -108,7 +108,7 @@ function Get-FileProperty {
     $_ = Get-Item -Path $Path
     
     [PSCustomObject]@{
-        TypeName          = 'MyType'
+        TypeName          = 'FileInformation'
         FullName          = $_.FullName
         LastWriteTime     = $_.LastWriteTime
         CreationTime      = $_.CreationTime
