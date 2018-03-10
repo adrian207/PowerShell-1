@@ -1,74 +1,82 @@
 function Test-TcpConnect {
-<#<#
+<#
 .SYNOPSIS
-Short description
+    Tests TCP handshake connections on common ports.
 
 .DESCRIPTION
-Long description
-
-.PARAMETER ComputerName
-Parameter description
+    The Test-TcpConnect cmdlet initiates a TCP handshake on common ports and returns true or false.
 
 .EXAMPLE
-An example
-
-.NOTES
-General notes
-#>
-.SYNOPSIS
-    This function 
-
-.DESCRIPTION
-    This function 
+    PS C:\> Test-TcpConnect -ComputerName COMPUTER01
 
 .EXAMPLE
-    Test-TcpConnect -ComputerName COMPUTER01
+    PS C:\> Test-TcpConnect -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
 
 .EXAMPLE
-    Test-TcpConnect -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
-
-.EXAMPLE
-    Get-Content -Path c:\something.txt | Test-TcpConnect
+    PS C:\> Get-Content -Path C:\servers.txt | Test-TcpConnect
 #>
 
     [CmdletBinding()]
 
     param(
         [parameter(
-            Mandatory=$true,
+            Mandatory=$false,
             ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true,
             Position=0)]
-        [alias("IPAddress")]
-        [string[]]$ComputerName
+        [alias('CN','__Server','IPAddress')]
+        [string[]]
+        $ComputerName = $env:ComputerName
     )
 
     process {
+        $CommonPort = @(
+            20,     #FTP data
+            21,     #FTP control
+            22,     #SSH
+            23,     #Telnet
+            25,     #SMTP
+            80,     #HTTP
+            88,     #Kerberos
+            161,    #SNMP
+            443,    #HTTPS
+            8080,   #HTTP alternative
+            8443    #HTTPS alternative
+        )
+
         foreach ($Computer in $ComputerName) {
-            $Name = $Computer.ToUpper()
-            $Ports = @(
-                22,     #SSH
-                23,     #Telnet
-                25,     #SNMP
-                80,     #HTTP
-                443,    #HTTPS
-                8080,   #HTTP alternative
-                8443    #HTTPS alternative
-            )
 
-            foreach ($Port in $Ports) {
-                $Splatting = @{
-                    ComputerName  = $Name
-                    Port          = $Port
-                    WarningAction = 'SilentlyContinue'
+            foreach ($Port in $CommonPort) {
+                $ScriptBlock = {
+                    param ($Computer,$Port)
+                    Test-NetConnection -ComputerName $Computer -Port $Port -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
                 }
-                $Result = Test-NetConnection @Splatting
-
-                New-Object -TypeName 'PSCustomObject' -Property @{
-                    'Remote Port'   = $Result.RemotePort
-                    'TCP Handshake' = $Result.TcpTestSucceeded
-                }
+                Start-Job -ScriptBlock $ScriptBlock -ArgumentList $Computer,$Port | Out-Null
             }
+
+            do {
+                $more = $false
+                
+                foreach ($_ in Get-Job) {
+                    if ($_.State -eq 'Completed') {
+                        $Job = Receive-Job -Job $_
+
+                        [PSCustomObject]@{
+                            PSTypeName       = 'TcpConnectResult'
+                            Source           = $env:ComputerName.ToUpper()
+                            Destination      = $Job.ComputerName
+                            IPv4Address      = $Job.RemoteAddress
+                            DestinationPort  = $Job.RemotePort
+                            TcpTestSucceeded = $Job.TcpTestSucceeded
+                            InterfaceAlias   = $Job.InterfaceAlias
+                        }
+                        Remove-Job -Job $_
+                    }
+                    $more = $true
+
+                    Start-Sleep -Milliseconds 500
+                }
+            } while ($more -ne $false)
         }
     }
 }
