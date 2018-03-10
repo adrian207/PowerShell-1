@@ -5,10 +5,10 @@
         <View>
             <Name>Default</Name>
             <ViewSelectedBy>
-                <TypeName>TestTcpConnectionResult</TypeName>
+                <TypeName>TcpConnectResult</TypeName>
             </ViewSelectedBy>
             <GroupBy>
-                <PropertyName>DestinationName</PropertyName>
+                <PropertyName>Destination</PropertyName>
             </GroupBy>
             <TableControl>
                 <TableHeaders>
@@ -17,16 +17,14 @@
                         <Width>20</Width>
                     </TableColumnHeader>
                     <TableColumnHeader>
-                        <Label>Interface</Label>
+                        <Label>IPv4Address</Label>
                         <Width>15</Width>
                     </TableColumnHeader>
                     <TableColumnHeader>
-                        <Label>DestinationPort</Label>
-                        <Width>15</Width>
+                        <Label>Destination Port</Label>
                     </TableColumnHeader>
                     <TableColumnHeader>
                         <Label>TcpTestSucceeded</Label>
-                        <Width>8</Width>
                     </TableColumnHeader>
                 </TableHeaders>
                 <TableRowEntries>
@@ -36,7 +34,7 @@
                                 <PropertyName>Source</PropertyName>
                             </TableColumnItem>
                             <TableColumnItem>
-                                <PropertyName>Interface</PropertyName>
+                                <PropertyName>IPv4Address</PropertyName>
                             </TableColumnItem>
                             <TableColumnItem>
                                 <PropertyName>DestinationPort</PropertyName>
