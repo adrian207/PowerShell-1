@@ -34,29 +34,12 @@ function Convert-BytesToSize {
 
     #Decide what is the type of size
     switch ($Size) {
-        {$Size -gt 1PB} {
-            $NewSize = "$([math]::Round(($Size / 1PB),$Precision))PB"
-            break
-        }
-        {$Size -gt 1TB} {
-            $NewSize = "$([math]::Round(($Size / 1TB),$Precision))TB"
-            break
-        }
-        {$Size -gt 1GB} {
-            $NewSize = "$([math]::Round(($Size / 1GB),$Precision))GB"
-            break
-        }
-        {$Size -gt 1MB} {
-            $NewSize = "$([math]::Round(($Size / 1MB),$Precision))MB"
-            break
-        }
-        {$Size -gt 1KB} {
-            $NewSize = "$([math]::Round(($Size / 1KB),$Precision))KB"
-            break
-        }
-        Default {
-            $NewSize = "$([math]::Round($Size,$Precision))Bytes"
-        }
+        {$Size -gt 1PB} { $NewSize = "$([math]::Round(($Size / 1PB),$Precision))PB" }
+        {$Size -gt 1TB} { $NewSize = "$([math]::Round(($Size / 1TB),$Precision))TB" }
+        {$Size -gt 1GB} { $NewSize = "$([math]::Round(($Size / 1GB),$Precision))GB" }
+        {$Size -gt 1MB} { $NewSize = "$([math]::Round(($Size / 1MB),$Precision))MB" }
+        {$Size -gt 1KB} { $NewSize = "$([math]::Round(($Size / 1KB),$Precision))KB" }
+        Default { $NewSize = "$([math]::Round($Size,$Precision))Bytes" }
     }
 
     [PSCustomObject]@{
