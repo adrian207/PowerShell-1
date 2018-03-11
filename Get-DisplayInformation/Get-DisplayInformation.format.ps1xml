@@ -12,6 +12,23 @@
                 <PropertyName>ComputerName</PropertyName>
             </GroupBy>
             <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <label>Product</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Driver</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Driver Date</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Type of Ram</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Amount of RAM</label>
+                    </TableColumnHeader>
+                </TableHeaders>
                 <TableRowEntries>
                     <TableRowEntry>
                         <TableColumnItems>
@@ -19,13 +36,66 @@
                                 <PropertyName>Caption</PropertyName>
                             </TableColumnItem>
                             <TableColumnItem>
-                                <PropertyName>Driver</PropertyName>
+                                <PropertyName>DriverVersion</PropertyName>
                             </TableColumnItem>
                             <TableColumnItem>
                                 <PropertyName>DriverDate</PropertyName>
+                                <FormatString>MMM d, yyyy</FormatString>
                             </TableColumnItem>
                             <TableColumnItem>
-                                <PropertyName>InstalledDisplayDrivers</PropertyName>
+                                <PropertyName>VideoMemoryType</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <ScriptBlock>
+                                    "{0:n1}MB" -f ($_.AdapterRAM / 1MB)
+                                </ScriptBlock>
+                                <Alignment>Right</Alignment>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+        <View>
+            <Name>Default</Name>
+            <ViewSelectedBy>
+                <TypeName>DisplayInformation</TypeName>
+            </ViewSelectedBy>
+            <GroupBy>
+                <Label>Computer Name</Label>
+                <PropertyName>ComputerName</PropertyName>
+            </GroupBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <label>Description</label>
+                        <Width>20</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Manufacturer</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Product</label>
+                        <Width>10</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Serial Number</label>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>UserFriendlyName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ManufacturerName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>ProductCodeID</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>SerialNumberID</PropertyName>
                             </TableColumnItem>
                         </TableColumnItems>
                     </TableRowEntry>
