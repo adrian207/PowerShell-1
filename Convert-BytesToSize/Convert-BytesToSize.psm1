@@ -4,12 +4,17 @@ function Convert-BytesToSize {
     Converts any integer size given to a user friendly size.
 
 .DESCRIPTION
-    Converts any integer size given to a user friendly size.
+    The Convert-BytesToSize cmdlet converts any integer size given to a user friendly size.
 
 .PARAMETER Size
 
 .EXAMPLE
-    PS> Convert-BytesToSize -Size 134217728
+    PS C:\> Convert-BytesToSize -Size 134217728
+
+    Converts size to show 128MB
+
+.EXAMPLE
+    PS C:\> Convert-BytesToSize -Size 134217728 -Precision 3
 
     Converts size to show 128MB
 #>
@@ -32,7 +37,6 @@ function Convert-BytesToSize {
         $Precision = 2
     )
 
-    #Decide what is the type of size
     switch ($Size) {
         {$Size -gt 1PB} { $NewSize = "$([math]::Round(($Size / 1PB),$Precision))PB" }
         {$Size -gt 1TB} { $NewSize = "$([math]::Round(($Size / 1TB),$Precision))TB" }
