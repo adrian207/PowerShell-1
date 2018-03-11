@@ -18,6 +18,8 @@ function Get-ADLockStatus {
     Get-Content C:\users.txt | Get-ADLockStatus
 #>
 
+    [CmdletBinding()]
+
     param(
         [Parameter(
             Mandatory=$true,
