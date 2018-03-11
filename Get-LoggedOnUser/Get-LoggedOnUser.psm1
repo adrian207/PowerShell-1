@@ -1,26 +1,28 @@
 function Get-LoggedOnUser {
 <#
 .SYNOPSIS
-    This function gets the logged on user for a local or remote machine.
+    Gets the logged on users for a local or remote machine.
 
 .DESCRIPTION
-    This function gets the logged on user for a local or remote machine.
+    The Get-LoggedOnUser cmdlet gets the logged on users for a local or remote machine.
 
 .EXAMPLE
-    PS> Get-LoggedOnUser
+    PS C:\> Get-LoggedOnUser
 
-    Returns the logged on user for the local machine.
-
-.EXAMPLE
-    PS> Get-LoggedOnUser -ComputerName COMPUTER01
-
-    Returns the logged on user for the remote machine COMPUTER01.
+    Returns the logged on users for the local machine.
 
 .EXAMPLE
-    PS> Get-LoggedOnUser -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
+    PS C:\> Get-LoggedOnUser -ComputerName COMPUTER01
+
+    Returns the logged on users for the remote machine COMPUTER01.
 
 .EXAMPLE
-    PS> Out-Content -Path C:\computers.txt | Get-LoggedOnUser
+    PS C:\> Get-LoggedOnUser -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
+
+    Returns the logged on users for the remote machines COMPUTER01, COMPUTER02, and COMPUTER03.
+
+.EXAMPLE
+    PS C:\> Out-Content -Path C:\computers.txt | Get-LoggedOnUser
 #>
 
     [CmdletBinding()]
@@ -38,8 +40,8 @@ function Get-LoggedOnUser {
 
     process {
         $Splatting = @{
-            ClassName = 'Win32_ComputerSystem'
-            ErrorAction = 'Stop'
+            ClassName = 'Win32_LoggedOnUser'
+            ErrorAction = 'Continue'
         }
 
         foreach ($Computer in $ComputerName) {
@@ -50,7 +52,6 @@ function Get-LoggedOnUser {
             else {
                 $Splatting.ComputerName = $null
             }
-            
 
             Write-Verbose -Message ("{0} - Getting logged on user" -f $Name)
             try {
@@ -65,9 +66,65 @@ function Get-LoggedOnUser {
             [PSCustomObject]@{
                 PSTypeName     = 'LoggedOnUser'
                 ComputerName   = $Name
-                LoggedOnUser   = $CimInstance.UserName
+                LoggedOnUser   = $CimInstance.Antecedent.Name | Select-Object -Unique
                 ComputerStatus = $ComputerStatus
             }
+        }
+    }
+}
+
+function Invoke-LogOffUser {
+<#
+.SYNOPSIS
+    Logs off users on a local or remote machine.
+
+.DESCRIPTION
+    The Get-LoggedOnUser logs off users on a local or remote machine.
+
+.EXAMPLE
+    PS C:\> Invoke-LogOffUser -ComputerName COMPUTER01
+
+    Logs off users on the remote machine COMPUTER01.
+
+.EXAMPLE
+    PS C:\> Invoke-LogOffUser -ComputerName COMPUTER01,COMPUTER02,COMPUTER03
+
+    Logs off users on the remote machines COMPUTER01, COMPUTER02, and COMPUTER03.
+
+.EXAMPLE
+    PS C:\> Out-Content -Path C:\computers.txt | Invoke-LogOffUser
+#>
+
+    [CmdletBinding()]
+
+    param (
+        [parameter(
+            Mandatory=$false,
+            ValueFromPipelineByPropertyName=$true,
+            Position=1
+        )]
+        [string[]]
+        $ComputerName = $env:ComputerName
+    )
+
+    process {
+        $Splatting = @{
+            ClassName  = 'Win32_OperatingSystem'
+            MethodName = 'Win32Shutdown'
+            Arguments  = @{ Flags = 4 }
+            Confirm    = $true
+        }
+
+        foreach ($Computer in $ComputerName) {
+            $Name = $Computer.ToUpper()
+            if ($Name -ne $env:ComputerName) {
+                $Splatting.ComputerName = $Name
+            }
+            else {
+                $Splatting.ComputerName = $null
+            }
+
+            Invoke-CimMethod @Splatting
         }
     }
 }
