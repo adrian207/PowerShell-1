@@ -1,24 +1,45 @@
 function Get-MuiCache {
 <#
 .SYNOPSIS
-    This function gets a list of recently executed programs from the MUI cache.
+    Get a list of recently executed programs from the MUI cache.
 
 .DESCRIPTION
-    This function gets a list of recently executed programs from the MUI cache.
+    The Get-MuiCache cmdlet gets a list of recently executed programs from the MUI cache.
 
 .EXAMPLE
-    PS> Get-MuiCache | Out-File -Path c:\something.csv
+    PS C:\> Get-MuiCache
+
+.EXAMPLE
+    PS C:\> Get-MuiCache | Out-File -Path c:\something.csv
 #>
 
     [CmdletBinding()]
 
-    param()
+    param (
+        [parameter(
+            Mandatory=$false,
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true)]
+        [string[]]
+        $ComputerName = $env:ComputerName
+    )
     
     process {
         $RegistryKeyPaths = @(
             'HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache',
             'HKCU:\SOFTWARE\Microsoft\Windows\ShellNoRoam\MUICache'
         )
+
+        foreach ($Computer in $ComputerName) {
+            $Name = $Computer.ToUpper()
+            if ($Name -ne $env:ComputerName) {
+                $Splatting.ComputerName = $Name
+            }
+            else {
+                $Splatting.PSObject.Properties.Remove('ComputerName')
+            }
+        }
+
 
         foreach ($RegistryKeyPath in $RegistryKeyPaths) {
             if (Test-Path -Path $RegistryKeyPath) {
@@ -35,7 +56,7 @@ function Get-MuiCache {
                 }
             }
             else {
-                Write-Warning -Message ("PROCESS - {0} path does not exist" -f $RegistryKeyPath)
+                Write-Warning -Message ("{0} path does not exist" -f $RegistryKeyPath)
             }
         }
     }
@@ -50,10 +71,10 @@ function Get-CompatibilityAssistant {
     This function gets a list of recently executed programs from the Compatibility Assistant.
 
 .EXAMPLE
-    PS> Get-CompatibilityAssistant
+    PS C:\> Get-CompatibilityAssistant
 
 .EXAMPLE
-    PS> Get-CompatibilityAssistant | Out-File -Path c:\something.csv
+    PS C:\> Get-CompatibilityAssistant | Out-File -Path c:\something.csv
 #>
 
     [CmdletBinding()]
