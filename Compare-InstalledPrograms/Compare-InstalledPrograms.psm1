@@ -1,21 +1,20 @@
 function Compare-InstalledPrograms {
 <#
 .SYNOPSIS
-    This function compares a list of installed programs on two computers.
+    Compares a list of installed programs on two computers.
 
 .DESCRIPTION
-    This function compares a list of installed programs on two computers.
+    The Compare-InstalledPrograms cmdlet compares a list of installed programs on two computers.
 
 .EXAMPLE
-    Compare-InstalledPrograms -ReferenceComputer COMPUTER01 -DifferenceComputer COMPUTER02
+    PS C:\> Compare-InstalledPrograms -ReferenceComputer COMPUTER01 -DifferenceComputer COMPUTER02
 #>
-    
+
     [CmdletBinding()]
 
     param(
         [parameter(
             Mandatory=$true,
-            ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true,
             Position=0)]
         [string]
@@ -23,7 +22,6 @@ function Compare-InstalledPrograms {
 
         [parameter(
             Mandatory=$true,
-            ValueFromPipeline=$true,
             ValueFromPipelineByPropertyName=$true,
             Position=1)]
         [string]
@@ -31,19 +29,18 @@ function Compare-InstalledPrograms {
 
         [parameter(
             Mandatory=$false,
-            ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true)]
+            ValueFromRemainingArguments=$true)]
         [string]
-        $IncludeEqual = $false
+        $Splatting
     )
 
-    begin {
-        $ReferenceObject = Get-InstalledPrograms -ComputerName $ReferenceComputer
-        $DifferenceObject = Get-InstalledPrograms -ComputerName $DifferenceComputer
-    }
-
     process {
-        $CompareObject = Compare-Object -ReferenceObject $ReferenceObject -DifferenceObject $DifferenceObject
+        $Splatting = @{
+            ReferenceObject = Get-InstalledPrograms -ComputerName $ReferenceComputer
+            DifferenceObject = Get-InstalledPrograms -ComputerName $DifferenceComputer
+        }
+
+        $CompareObject = Compare-Object @Splatting
         [PSCustomObject]@{
             PSTypeName    = 'CompareInstalledPrograms'
             InputObject   = $CompareObject.InputObject
@@ -55,10 +52,10 @@ function Compare-InstalledPrograms {
 function Get-InstalledPrograms {
 <#
 .SYNOPSIS
-    This function gets a list of programs on a local or remote machine.
+    Gets a list of programs on a local or remote machine.
 
 .DESCRIPTION
-    This function gets a list of programs on a local or remote machine.
+    The Get-InstalledPrograms cmdlet gets a list of programs on a local or remote machine.
 
 .PARAMETER ComputerName
 
@@ -75,7 +72,9 @@ function Get-InstalledPrograms {
     Get-Content C:\computers.txt | Get-InstalledPrograms
 #>
 
-    param(
+    [CmdletBinding()]
+
+    param (
         [parameter(
             Mandatory=$false,
             ValueFromPipeline=$true,
@@ -84,13 +83,11 @@ function Get-InstalledPrograms {
         $ComputerName = $env:ComputerName
     )
 
-    begin {
+    process {
         $Splatting = @{
             ArgumentList = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*'
         }
-    }
 
-    process {
         foreach ($Computer in $ComputerName) {
             $Name = $Computer.ToUpper()
             if ($Name -ne $env:ComputerName) {
@@ -100,15 +97,24 @@ function Get-InstalledPrograms {
                 $Splatting.PSObject.Properties.Remove('ComputerName')
             }
             
-            Write-Verbose -Message ("PROCESS - {0} - Getting uninstall information..." -f $Name)
+            Write-Verbose -Message ("{0} - Getting uninstall information..." -f $Name)
             Invoke-Command @Splatting -ScriptBlock {
-                foreach ( $_ in (Get-ItemProperty -Path $args[0]) ) {
+                param ($ArgumentList)
+                foreach ( $_ in (Get-ItemProperty -Path $ArgumentList) ) {
+                    if ($_.InstallDate) {
+                        $InstallDate = [datetime]::ParseExact($_.InstallDate, 'yyyyMMdd', $null)
+                    }
+                    else {
+                        $InstallDate = $null
+                    }
+
                     [PSCustomObject]@{
                         PSTypeName     = 'InstalledPrograms'
+                        ComputerName   = $Name
                         DisplayName    = $_.DisplayName
                         Publisher      = $_.Publisher
                         DisplayVersion = $_.DisplayVersion
-                        InstallDate    = $_.InstallDate
+                        InstallDate    = $InstallDate
                     }
                 }
             }
