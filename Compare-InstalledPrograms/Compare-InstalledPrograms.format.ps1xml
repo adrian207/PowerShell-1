@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Configuration>    
+    <ViewDefinitions>
+        <View>
+            <Name>Default</Name>
+            <ViewSelectedBy>
+                <TypeName>CompareInstalledPrograms</TypeName>
+            </ViewSelectedBy>
+            <GroupBy>
+                <Label>Computer Name</Label>
+                <PropertyName>ComputerName</PropertyName>
+            </GroupBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <label>InputObject</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>SideIndicator</label>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>InputObject</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>SideIndicator</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+        <View>
+            <Name>Default</Name>
+            <ViewSelectedBy>
+                <TypeName>InstalledPrograms</TypeName>
+            </ViewSelectedBy>
+            <GroupBy>
+                <Label>Computer Name</Label>
+                <PropertyName>ComputerName</PropertyName>
+            </GroupBy>
+            <TableControl>
+                <TableHeaders>
+                    <TableColumnHeader>
+                        <label>Program</label>
+                        <Width>30</Width>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Publisher</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Version</label>
+                    </TableColumnHeader>
+                    <TableColumnHeader>
+                        <label>Install Date</label>
+                        <alignment>Right</alignment>
+                    </TableColumnHeader>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>DisplayName</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Publisher</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>DisplayVersion</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>InstallDate</PropertyName>
+                                <FormatString>MMM d, yyyy</FormatString>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
