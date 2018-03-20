@@ -1,4 +1,4 @@
-function Get-FreeSpace {
+function Get-DiskInfo {
 <#
 .SYNOPSIS
     This function gets the amount of free disk space on a local or remote machine.
@@ -9,16 +9,16 @@ function Get-FreeSpace {
 .PARAMETER ComputerName
 
 .EXAMPLE
-    Get-FreeSpace
+     Get-DiskInfo
 
 .EXAMPLE
-    Get-FreeSpace -ComputerName SERVER01
+     Get-DiskInfo -ComputerName SERVER01
 
 .EXAMPLE
-    Get-FreeSpace -ComputerName SERVER01,SERVER02,SERVER03
+     Get-DiskInfo -ComputerName SERVER01,SERVER02,SERVER03
 
 .EXAMPLE
-    Get-Content C:\computers.txt | Get-FreeSpace
+    Get-Content C:\computers.txt |  Get-DiskInfo
 #>
 
     [CmdletBinding()]
