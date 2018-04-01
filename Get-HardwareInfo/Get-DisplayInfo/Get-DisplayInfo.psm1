@@ -1,4 +1,4 @@
-﻿function Get-DisplayInformation {
+﻿function Get-DisplayInfo {
 <#
 .SYNOPSIS
     This function gets the display information from a local or remote machine.
